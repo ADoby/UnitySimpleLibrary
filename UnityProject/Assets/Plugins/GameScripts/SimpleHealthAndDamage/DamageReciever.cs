@@ -1,39 +1,31 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class DamageReciever : MonoBehaviour 
+namespace SimpleLibrary
 {
-
-    public HealthHandler reciever;
-    public vp_DamageHandler reciever2;
-
-    public float DamageMultiply = 1.0f;
-
-    public void Damage(vp_DamageInfo damageInfo)
+    public class DamageReciever : MonoBehaviour
     {
-        if (reciever)
-        {
-            damageInfo.Damage *= DamageMultiply;
-            reciever.Damage(damageInfo);
-        }
-        if (reciever2)
-        {
-            damageInfo.Damage *= DamageMultiply;
-            reciever2.Damage(damageInfo);
-        }
-    }
+        public HealthHandler reciever;
 
-    public void Damage(float damage)
-    {
-        if (reciever)
+        public float DamageMultiply = 1.0f;
+
+        public void Damage(DamageInfo damageInfo)
         {
-            damage *= DamageMultiply;
-            reciever.Damage(damage);
+            if (reciever)
+            {
+                damageInfo.Value *= DamageMultiply;
+                reciever.Damage(damageInfo);
+            }
         }
-        if (reciever2)
+
+        public void Damage(float damage)
         {
-            damage *= DamageMultiply;
-            reciever2.Damage(damage);
+            if (reciever)
+            {
+                damage *= DamageMultiply;
+                reciever.Damage(damage);
+            }
         }
     }
 }
+

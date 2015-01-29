@@ -1,30 +1,23 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class DynamicCrosshair : MonoBehaviour {
-
-    
-
+public class DynamicCrosshair : MonoBehaviour 
+{
     public bool HideOnFirstPersonZoom = true;
     public bool HideOnDeath = true;
 
-    public vp_FPPlayerEventHandler Player = null;
-    public vp_FPInput input;
-
     protected virtual void Awake()
     {
-        Player = GameObject.FindObjectOfType(typeof(vp_FPPlayerEventHandler)) as vp_FPPlayerEventHandler; // cache the player event handler
+
     }
 
     protected virtual void OnEnable()
     {
-        if (Player != null)
-            Player.Register(this);
+
     }
     protected virtual void OnDisable()
     {
-        if (Player != null)
-            Player.Unregister(this);
+
     }
 
     public enum preset { none, shotgunPreset, crysisPreset }
@@ -71,7 +64,8 @@ public class DynamicCrosshair : MonoBehaviour {
 
     void Update()
     {
-        SetSpread(Player.Velocity.Get().magnitude * SpreadForVelocity);
+        //TODO Way to enter player movement
+        //SetSpread(Player.Velocity.Get().magnitude * SpreadForVelocity);
 
         ChangeSpread(spreadPerSecond * Time.deltaTime);
         rotAngle += rotSpeed * Time.deltaTime;
@@ -110,13 +104,26 @@ public class DynamicCrosshair : MonoBehaviour {
     GUIStyle verticalT;
     GUIStyle horizontalT;
 
+    //TODO needs to be implemented or descriptioniert
+    public virtual bool PlayerIsZooming
+    {
+        get
+        {
+            return false;
+        }
+    }
+    public virtual bool PlayerIsDead
+    {
+        get
+        {
+            return false;
+        }
+    }
+
     void OnGUI()
     {
-        if (HideOnDeath && Player.Dead.Active)
+        if (HideOnDeath && PlayerIsDead)
             return;
-        if (input && input.MouseCursorForced)
-            return;
-
 
         if (verticalT == null)
         {
@@ -132,12 +139,8 @@ public class DynamicCrosshair : MonoBehaviour {
         float BoxSize = 4f;
         GUI.Box(new Rect((Screen.width) / 2 - BoxSize / 2f, (Screen.height) / 2 - BoxSize / 2f, BoxSize, BoxSize), temp, horizontalT);
 
-        if (HideOnFirstPersonZoom && Player.Zoom.Active && Player.IsFirstPerson.Get())
-            return;
-
-        
-
-        
+        if (HideOnFirstPersonZoom && PlayerIsZooming)
+            return;        
 
         if(showCrosshair && verticalTexture && horizontalTexture){
                 

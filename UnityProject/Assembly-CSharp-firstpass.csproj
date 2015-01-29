@@ -51,12 +51,15 @@
      <Compile Include="Assets\Plugins\EditorScripts\SimplePivotEditor\Editor\SetPivot.cs" />
      <Compile Include="Assets\Plugins\EditorScripts\SimpleTransformInspector\Editor\TransformInspector.cs" />
      <Compile Include="Assets\Plugins\GameScripts\SimpleAttributeSystem\Attribute.cs" />
+     <Compile Include="Assets\Plugins\GameScripts\SimpleAttributeSystem\AttributeManager.cs" />
      <Compile Include="Assets\Plugins\GameScripts\SimpleAttributeSystem\Editor\AttributeManager_Editor.cs" />
      <Compile Include="Assets\Plugins\GameScripts\SimpleConditions\ConditionUI.cs" />
      <Compile Include="Assets\Plugins\GameScripts\SimpleConditions\Game.cs" />
+     <Compile Include="Assets\Plugins\GameScripts\SimpleConditions\WinCondition.cs" />
      <Compile Include="Assets\Plugins\GameScripts\SimpleCrosshair\DynamicCrosshair.cs" />
      <Compile Include="Assets\Plugins\GameScripts\SimpleHealthAndDamage\ColliderHit.cs" />
      <Compile Include="Assets\Plugins\GameScripts\SimpleHealthAndDamage\DamageColliderManager.cs" />
+     <Compile Include="Assets\Plugins\GameScripts\SimpleHealthAndDamage\DamageInfo.cs" />
      <Compile Include="Assets\Plugins\GameScripts\SimpleHealthAndDamage\DamageReciever.cs" />
      <Compile Include="Assets\Plugins\GameScripts\SimpleHealthAndDamage\HealthHandler.cs" />
      <Compile Include="Assets\Plugins\GameScripts\SimpleInput\Editor\InputControllerEditor.cs" />
@@ -65,7 +68,6 @@
      <Compile Include="Assets\Plugins\GameScripts\SimplePool\GameObjectPoolCreate.cs" />
      <Compile Include="Assets\Plugins\GameScripts\SimpleSpawner\Arena_Spawner.cs" />
      <Compile Include="Assets\Plugins\GameScripts\SimpleSpawner\Spawner.cs" />
-     <Compile Include="Assets\Plugins\GameScripts\SimpleTimer\Timer.cs" />
      <Compile Include="Assets\Plugins\GameScripts\SimpleUI\Editor\UICreator.cs" />
      <Compile Include="Assets\Plugins\GameScripts\SimpleUI\UI\GUITools.cs" />
      <Compile Include="Assets\Plugins\GameScripts\SimpleUI\UI\UISystem\CallBack\UIDefaultCallback.cs" />
@@ -78,8 +80,19 @@
      <Compile Include="Assets\Plugins\GameScripts\SimpleUI\UI\UISystem\UIScrollPanel.cs" />
      <Compile Include="Assets\Plugins\GameScripts\SimpleUI\UI\UISystem\UIText.cs" />
      <Compile Include="Assets\Plugins\GameScripts\SimpleUI\UI\UISystem\UITexture.cs" />
+     <Compile Include="Assets\Plugins\SimpleLibrary\Editor\Timer_Editor.cs" />
+     <Compile Include="Assets\Plugins\SimpleLibrary\Examples\Scripts\TimerExamples.cs" />
+     <Compile Include="Assets\Plugins\SimpleLibrary\Extensions.cs" />
+     <Compile Include="Assets\Plugins\SimpleLibrary\SerializedPropertyValueExtension.cs" />
+     <Compile Include="Assets\Plugins\SimpleLibrary\SimpleEditor.cs" />
+     <Compile Include="Assets\Plugins\SimpleLibrary\Singleton.cs" />
+     <Compile Include="Assets\Plugins\SimpleLibrary\Timer.cs" />
+     <None Include="Assets\Plugins\Dependencies\Editor.ReorderableList.xml" />
  <Reference Include="UnityEngine.UI">
  <HintPath>G:/Programmieren/Unity/Editor-4.6.1/Data/UnityExtensions/Unity/GUISystem/4.6.1/UnityEngine.UI.dll</HintPath>
+ </Reference>
+ <Reference Include="Editor.ReorderableList">
+ <HintPath>C:/Users/ADoby/Documents/GitHub/UnitySimpleLibrary/UnityProject/Assets/Plugins/Dependencies/Editor.ReorderableList.dll</HintPath>
  </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
