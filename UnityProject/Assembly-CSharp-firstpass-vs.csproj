@@ -80,13 +80,15 @@
      <Compile Include="Assets\Plugins\GameScripts\SimpleUI\UI\UISystem\UIScrollPanel.cs" />
      <Compile Include="Assets\Plugins\GameScripts\SimpleUI\UI\UISystem\UIText.cs" />
      <Compile Include="Assets\Plugins\GameScripts\SimpleUI\UI\UISystem\UITexture.cs" />
-     <Compile Include="Assets\Plugins\SimpleLibrary\Editor\Timer_Editor.cs" />
-     <Compile Include="Assets\Plugins\SimpleLibrary\Examples\Scripts\TimerExamples.cs" />
-     <Compile Include="Assets\Plugins\SimpleLibrary\Extensions.cs" />
-     <Compile Include="Assets\Plugins\SimpleLibrary\SerializedPropertyValueExtension.cs" />
-     <Compile Include="Assets\Plugins\SimpleLibrary\SimpleEditor.cs" />
-     <Compile Include="Assets\Plugins\SimpleLibrary\Singleton.cs" />
-     <Compile Include="Assets\Plugins\SimpleLibrary\Timer.cs" />
+     <Compile Include="Assets\Plugins\SimpleLibrary_Essentials\Editor\Timer_Editor.cs" />
+     <Compile Include="Assets\Plugins\SimpleLibrary_Essentials\Examples\Singleton\Scripts\SingletonExample_GameManager.cs" />
+     <Compile Include="Assets\Plugins\SimpleLibrary_Essentials\Examples\Singleton\Scripts\SingletonExample_GameManagerUI.cs" />
+     <Compile Include="Assets\Plugins\SimpleLibrary_Essentials\Examples\Singleton\Scripts\SingletonExample_PlayerTester.cs" />
+     <Compile Include="Assets\Plugins\SimpleLibrary_Essentials\Examples\Timer\Scripts\TimerExamples.cs" />
+     <Compile Include="Assets\Plugins\SimpleLibrary_Essentials\Extensions.cs" />
+     <Compile Include="Assets\Plugins\SimpleLibrary_Essentials\SimpleEditor.cs" />
+     <Compile Include="Assets\Plugins\SimpleLibrary_Essentials\Singleton.cs" />
+     <Compile Include="Assets\Plugins\SimpleLibrary_Essentials\Timer.cs" />
      <None Include="Assets\Plugins\Dependencies\Editor.ReorderableList.xml" />
  <Reference Include="UnityEngine.UI">
  <HintPath>G:/Programmieren/Unity/Editor-4.6.1/Data/UnityExtensions/Unity/GUISystem/4.6.1/UnityEngine.UI.dll</HintPath>
