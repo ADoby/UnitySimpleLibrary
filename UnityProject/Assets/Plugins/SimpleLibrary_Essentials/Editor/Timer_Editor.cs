@@ -1,4 +1,11 @@
-﻿using UnityEngine;
+﻿/*Author: Tobias Zimmerlin
+ * 30.01.2015
+ * V1
+ * 
+ */
+
+
+using UnityEngine;
 using UnityEditor;
 using System.Reflection;
 

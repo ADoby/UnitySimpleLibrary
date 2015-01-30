@@ -1,4 +1,11 @@
-﻿using UnityEditor;
+﻿/*Author: Tobias Zimmerlin
+ * 30.01.2015
+ * V1
+ * 
+ */
+
+
+using UnityEditor;
 using UnityEngine;
 
 namespace SimpleLibrary

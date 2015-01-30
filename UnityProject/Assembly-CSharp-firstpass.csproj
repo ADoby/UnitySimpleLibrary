@@ -46,10 +46,6 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Plugins\EditorScripts\SimpleEditorShortcuts\Editor\NewKeyboardShortcuts.cs" />
-     <Compile Include="Assets\Plugins\EditorScripts\SimplePivotEditor\Editor\PivotManager.cs" />
-     <Compile Include="Assets\Plugins\EditorScripts\SimplePivotEditor\Editor\SetPivot.cs" />
-     <Compile Include="Assets\Plugins\EditorScripts\SimpleTransformInspector\Editor\TransformInspector.cs" />
      <Compile Include="Assets\Plugins\GameScripts\SimpleAttributeSystem\Attribute.cs" />
      <Compile Include="Assets\Plugins\GameScripts\SimpleAttributeSystem\AttributeManager.cs" />
      <Compile Include="Assets\Plugins\GameScripts\SimpleAttributeSystem\Editor\AttributeManager_Editor.cs" />
@@ -80,6 +76,9 @@
      <Compile Include="Assets\Plugins\GameScripts\SimpleUI\UI\UISystem\UIScrollPanel.cs" />
      <Compile Include="Assets\Plugins\GameScripts\SimpleUI\UI\UISystem\UIText.cs" />
      <Compile Include="Assets\Plugins\GameScripts\SimpleUI\UI\UISystem\UITexture.cs" />
+     <Compile Include="Assets\Plugins\SimpleLibrary_Editor\SimpleEditorShortcuts\Editor\SimpleKeyboardShortcuts.cs" />
+     <Compile Include="Assets\Plugins\SimpleLibrary_Editor\SimplePivotEditor\Editor\SimplePivotController.cs" />
+     <Compile Include="Assets\Plugins\SimpleLibrary_Editor\SimpleTransformInspector\Editor\TransformInspector.cs" />
      <Compile Include="Assets\Plugins\SimpleLibrary_Essentials\Editor\Timer_Editor.cs" />
      <Compile Include="Assets\Plugins\SimpleLibrary_Essentials\Examples\Singleton\Scripts\SingletonExample_GameManager.cs" />
      <Compile Include="Assets\Plugins\SimpleLibrary_Essentials\Examples\Singleton\Scripts\SingletonExample_GameManagerUI.cs" />
@@ -89,12 +88,16 @@
      <Compile Include="Assets\Plugins\SimpleLibrary_Essentials\SimpleEditor.cs" />
      <Compile Include="Assets\Plugins\SimpleLibrary_Essentials\Singleton.cs" />
      <Compile Include="Assets\Plugins\SimpleLibrary_Essentials\Timer.cs" />
-     <None Include="Assets\Plugins\Dependencies\Editor.ReorderableList.xml" />
+     <None Include="Assets\Plugins\SimpleLibrary_Editor\README.txt" />
+     <None Include="Assets\Plugins\SimpleLibrary_Essentials\README.txt" />
+     <None Include="Assets\Plugins\GameScripts\SimpleAttributeSystem\Rotorz\Reorderable List Field\README.txt" />
+     <None Include="Assets\Plugins\GameScripts\SimpleAttributeSystem\Rotorz\Reorderable List Field\LICENSE.txt" />
+     <None Include="Assets\Plugins\GameScripts\SimpleAttributeSystem\Rotorz\Reorderable List Field\Editor.ReorderableList.xml" />
  <Reference Include="UnityEngine.UI">
  <HintPath>G:/Programmieren/Unity/Editor-4.6.1/Data/UnityExtensions/Unity/GUISystem/4.6.1/UnityEngine.UI.dll</HintPath>
  </Reference>
  <Reference Include="Editor.ReorderableList">
- <HintPath>C:/Users/ADoby/Documents/GitHub/UnitySimpleLibrary/UnityProject/Assets/Plugins/Dependencies/Editor.ReorderableList.dll</HintPath>
+ <HintPath>C:/Users/ADoby/Documents/GitHub/UnitySimpleLibrary/UnityProject/Assets/Plugins/GameScripts/SimpleAttributeSystem/Rotorz/Reorderable List Field/Editor.ReorderableList.dll</HintPath>
  </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

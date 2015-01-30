@@ -1,4 +1,11 @@
-﻿using Mathf = UnityEngine.Mathf;
+﻿/*Author: Tobias Zimmerlin
+ * 30.01.2015
+ * V1
+ * 
+ */
+
+
+using Mathf = UnityEngine.Mathf;
 using AnimationCurve = UnityEngine.AnimationCurve;
 using Random = UnityEngine.Random;
 using Time = UnityEngine.Time;
