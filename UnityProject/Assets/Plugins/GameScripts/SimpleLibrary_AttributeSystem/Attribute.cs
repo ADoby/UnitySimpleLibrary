@@ -1,5 +1,6 @@
 ﻿using System;
-namespace AttributeSystem
+
+namespace SimpleLibrary
 {
     #region Classes
     [System.Serializable]

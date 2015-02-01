@@ -6,7 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace AttributeSystem
+namespace SimpleLibrary
 {
     [CustomEditor(typeof(AttributeManager))]
     public class AttributeManager_Editor : Editor
