@@ -31,15 +31,26 @@ namespace SimpleLibrary
         private Dictionary<string, Attribute> AttributeDictionary = new Dictionary<string, Attribute>();
 
         #region UI
+        public enum UIFilterMethods
+        {
+            SHOW_ALL,
+            ONLY_THESE,
+            ALL_EXCEPT_THESE
+        }
+        public UIFilterMethods SelectedFilterMode = UIFilterMethods.SHOW_ALL;
+        public string Filter = string.Empty;
+
         [SerializeField]
         public List<string> AttributeNames = new List<string>();
+
+        int selectedID = -1;
 
         public bool Attributes_Debug = false;
         public bool Attributes_FoldOut = false;
         public bool NameList_FoldOut = false;
         #endregion
 
-        //Awake
+        //Singleton Awake
         void Init()
         {
             foreach (var attribute in Attributes)

@@ -39,6 +39,7 @@ namespace SimpleLibrary
     public class Attribute
     {
         public string Name = "";
+        public string FilterAttribute = string.Empty;
         public bool Enabled = true;
 
         //Can't be changed from outside
