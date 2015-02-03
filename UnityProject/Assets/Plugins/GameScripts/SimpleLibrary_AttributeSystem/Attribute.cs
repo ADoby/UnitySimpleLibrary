@@ -2,14 +2,14 @@
 
 namespace SimpleLibrary
 {
-    #region Classes
+    #region ValueClass
     [System.Serializable]
     public class AttributeValue
     {
         public float Value = 0f;
 
         public float StartValue = 0f;
-        public float ValuePerPoint = 0f;
+        public float ValuePerPoint = 1f;
         public float ValuePerPointMultipliedByCurrentPoints = 0f;
 
         public virtual void Reset()
@@ -39,7 +39,6 @@ namespace SimpleLibrary
     public class Attribute
     {
         public string Name = "";
-        public string FilterAttribute = string.Empty;
         public bool Enabled = true;
 
         //Can't be changed from outside
@@ -55,9 +54,24 @@ namespace SimpleLibrary
         #region POINTS
         public int Points = 0;
         public int StartPoints = 0;
-        public int MaxPoints = 0;
-    
-        public bool ResetPoints()
+        public int MaxPoints = 100;
+
+        public bool IsFull
+        {
+            get
+            {
+                return Points == MaxPoints;
+            }
+        }
+        public bool IsEmpty
+        {
+            get
+            {
+                return Points == StartPoints;
+            }
+        }
+
+        public virtual bool ResetPoints()
         {
             if (!Enabled || Locked || Points == StartPoints)
                 return false;
@@ -67,7 +81,7 @@ namespace SimpleLibrary
             return true;
         }
 
-        public bool AddPoint()
+        public virtual bool AddPoint()
         {
             if (!Enabled || Locked || Points >= MaxPoints)
                 return false;
@@ -76,7 +90,7 @@ namespace SimpleLibrary
             UpdatePoints();
             return true;
         }
-        public bool RemovePoint()
+        public virtual bool RemovePoint()
         {
             if (!Enabled || Locked || Points <= StartPoints)
                 return false;
@@ -85,7 +99,7 @@ namespace SimpleLibrary
             UpdatePoints();
             return true;
         }
-        public bool MaximizePoints()
+        public virtual bool MaximizePoints()
         {
             if (!Enabled || Locked)
                 return false;
@@ -94,7 +108,7 @@ namespace SimpleLibrary
             UpdatePoints();
             return true;
         }
-        protected void UpdatePoints()
+        protected virtual void UpdatePoints()
         {
             TriggerAttributeChanged();
         }
@@ -152,6 +166,8 @@ namespace SimpleLibrary
         public bool FoldOut = false;
         public bool Point_FoldOut = false;
         public bool Value_FoldOut = false;
+        public int SelectedName = 0;
+        public int SelectedFilter = 0;
         #endregion
 
         public override string ToString()

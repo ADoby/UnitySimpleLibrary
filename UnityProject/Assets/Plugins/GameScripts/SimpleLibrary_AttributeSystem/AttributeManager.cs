@@ -4,6 +4,17 @@ using System.Collections.Generic;
 
 namespace SimpleLibrary
 {
+    [System.Serializable]
+    public class FilterAttribute
+    {
+        public int Value = 0;
+    }
+    [System.Serializable]
+    public class NameAttribute
+    {
+        public int Value = 0;
+    }
+
     public class AttributeManager : MonoBehaviour
     {
         #region Singleton
@@ -16,34 +27,56 @@ namespace SimpleLibrary
                     instance = FindObjectOfType<AttributeManager>();
                 return instance;
             }
+            set
+            {
+                instance = value;
+            }
         }
         protected void Awake()
         {
             Init();
-            instance = this;
+            Instance = this;
         }
         #endregion
 
+
         [SerializeField]
-        public List<Attribute> Attributes = new List<Attribute>();
+        private List<Attribute> Attributes = new List<Attribute>();
+        public Attribute GetAttribute(int index)
+        {
+            if (index < 0 || index >= Attributes.Count)
+                return null;
+            return Attributes[index];
+        }
+        public void Switch(int index1, int index2)
+        {
+            Attribute temp = Attributes[index2];
+            Attributes[index2] = Attributes[index1];
+            Attributes[index1] = temp;
+        }
+        public int AttributeCount
+        {
+            get
+            {
+                return Attributes.Count;
+            }
+        }
+        public List<Attribute> GetAttributes()
+        {
+            return Attributes;
+        }
 
         //Used for performance and convenience reasons :P
-        private Dictionary<string, Attribute> AttributeDictionary = new Dictionary<string, Attribute>();
+        private Dictionary<string, Dictionary<string, Attribute>> AttributeDictionary = new Dictionary<string, Dictionary<string, Attribute>>();
 
         #region UI
-        public enum UIFilterMethods
-        {
-            SHOW_ALL,
-            ONLY_THESE,
-            ALL_EXCEPT_THESE
-        }
-        public UIFilterMethods SelectedFilterMode = UIFilterMethods.SHOW_ALL;
-        public string Filter = string.Empty;
+        public bool Filters_FoldOut = false;
+        [SerializeField]
+        public List<string> Filters = new List<string>();
+        public int CurrentFilterMask = 0;
 
         [SerializeField]
         public List<string> AttributeNames = new List<string>();
-
-        int selectedID = -1;
 
         public bool Attributes_Debug = false;
         public bool Attributes_FoldOut = false;
@@ -53,9 +86,18 @@ namespace SimpleLibrary
         //Singleton Awake
         void Init()
         {
+            string filterKey = string.Empty;
             foreach (var attribute in Attributes)
             {
-                AttributeDictionary.Add(attribute.Name, attribute);
+                filterKey = Filters[attribute.SelectedFilter];
+                if (!AttributeDictionary.ContainsKey(filterKey))
+                {
+                    AttributeDictionary.Add(filterKey, new Dictionary<string, Attribute>());
+                }
+                if (AttributeDictionary[filterKey].ContainsKey(attribute.Name))
+                    Debug.LogWarning(string.Format("You have a duplicate Attribute: Filter:{0} Name:{1}", filterKey, attribute.Name));
+                else
+                    AttributeDictionary[filterKey].Add(attribute.Name, attribute);
             }
         }
 
@@ -94,27 +136,61 @@ namespace SimpleLibrary
             if (AttributeNames.Contains(attribute.Name))
                 AttributeNames.Remove(attribute.Name);
         }
-        public void RemoveAttributeByName(string name)
+        public void RemoveAttribute(string filter, string name)
         {
-            RemoveAttribute(GetAttributeByName(name));
+            RemoveAttribute(GetAttribute(filter, name));
         }
         public void UpdateAttributeNamesList()
         {
             AttributeNames.Clear();
             foreach (var item in Attributes)
             {
-                AttributeNames.Add(item.Name);
+                if(!AttributeNames.Contains(item.Name))
+                    AttributeNames.Add(item.Name);
             }
         }
 
-        public Attribute GetAttributeByName(string name)
+        public Attribute GetAttribute(string filter, string name)
         {
-            foreach (var item in Attributes)
+            if (string.IsNullOrEmpty(filter) || string.IsNullOrEmpty(name))
+                return null;
+            Attribute value = null;
+            if (AttributeDictionary.ContainsKey(filter))
             {
-                if (string.Equals(item.Name, name, System.StringComparison.OrdinalIgnoreCase))
-                    return item;
+                AttributeDictionary[filter].TryGetValue(name, out value);
             }
-            return null;
+            return value;
+        }
+
+        public Attribute GetAttribute(int indexFilter, int indexName)
+        {
+            return GetAttribute(GetFilter(indexFilter), GetName(indexName));
+        }
+
+        public int GetNameIndex(string name)
+        {
+            if (!AttributeNames.Contains(name))
+                return -1;
+            return AttributeNames.IndexOf(name);
+        }
+        public string GetName(int index)
+        {
+            if (index < 0 || index >= AttributeNames.Count)
+                return string.Empty;
+            return AttributeNames[index];
+        }
+
+        public int GetFilterIndex(string filter)
+        {
+            if (!Filters.Contains(filter))
+                return -1;
+            return Filters.IndexOf(filter);
+        }
+        public string GetFilter(int index)
+        {
+            if (index < 0 || index >= Filters.Count)
+                return string.Empty;
+            return Filters[index];
         }
     }
 }

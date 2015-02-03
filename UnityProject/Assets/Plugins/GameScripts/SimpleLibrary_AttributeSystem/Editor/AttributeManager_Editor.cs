@@ -1,5 +1,4 @@
-﻿using Rotorz.ReorderableList;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
 using System.Collections;
@@ -11,8 +10,6 @@ namespace SimpleLibrary
 	[CustomEditor(typeof(AttributeManager))]
 	public class AttributeManager_Editor : Editor
 	{
-		private int AttributeMarginX = 20;
-		public GUIStyle labelMargin, textMargin, buttonMargin, miniButton, boldLabel, boldFoldOut, boldMiniButton;
 
 		AttributeManager manager;
 
@@ -22,11 +19,18 @@ namespace SimpleLibrary
 		SerializedProperty SelectedFilterMode;
 		SerializedProperty Filter;
 		SerializedProperty Attributes;
+        SerializedProperty Filters_FoldOut;
+        SerializedProperty CurrentFilterMask;
 
+        ReorderableList Names;
+        ReorderableList Filters;
+
+        int AttributeMarginX = 20;
+        GUIStyle labelMargin, textMargin, buttonMargin, miniButton, boldLabel, boldFoldOut, boldMiniButton;
 		bool initiated = false;
-
 		char FilterSplitCharacter = ',';
-		
+        Attribute removeAttribute = null;
+        int moveFrom = 0, moveTo = 0;
 
 		void OnEnable()
 		{
@@ -37,26 +41,67 @@ namespace SimpleLibrary
 			NameList_FoldOut = serializedObject.FindProperty("NameList_FoldOut");
 			Attributes_Debug = serializedObject.FindProperty("Attributes_Debug");
 			SelectedFilterMode = serializedObject.FindProperty("SelectedFilterMode");
+            Filters_FoldOut = serializedObject.FindProperty("Filters_FoldOut");
 			Filter = serializedObject.FindProperty("Filter");
+            CurrentFilterMask = serializedObject.FindProperty("CurrentFilterMask");
+
+            Names = new ReorderableList(serializedObject, serializedObject.FindProperty("AttributeNames"), false, false, false, false);
+            Names.drawElementCallback =
+                (Rect rect, int index, bool isActive, bool isFocused) =>
+                {
+                    var element = Names.serializedProperty.GetArrayElementAtIndex(index);
+                    rect.y += 1f;
+                    rect.height -= 2f;
+                    EditorGUI.LabelField(rect, element.stringValue);
+                };
+
+
+            Filters = new ReorderableList(serializedObject, serializedObject.FindProperty("Filters"));
+
+            Filters.drawElementCallback =
+                (Rect rect, int index, bool isActive, bool isFocused) =>
+                {
+                    var element = Filters.serializedProperty.GetArrayElementAtIndex(index);
+                    rect.y += 1f;
+                    rect.height -= 2f;
+                    element.stringValue = EditorGUI.TextField(rect, element.stringValue);
+                };
+            Filters.drawHeaderCallback = (Rect rect) =>
+            {
+                EditorGUI.LabelField(rect, "Filters");
+            };
+            Filters.onChangedCallback = FiltersChanged;
 		}
 
-		Attribute removeAttribute = null;
-		int moveFrom = 0, moveTo = 0;
+        public void FiltersChanged(ReorderableList list)
+        {
+            CurrentFilterMask.intValue = -1;
+        }
+
+        public bool FilterInFilters(int filter, int currentFilters)
+        {
+            return ((currentFilters & (1 << filter)) > 0);
+        }
 
 		public void ListIterator(SerializedProperty listProperty, ref SerializedProperty visible)
-		{
-			EditorGUILayout.PropertyField(SelectedFilterMode, new GUIContent("Filter Mode:"));
-			EditorGUILayout.LabelField(new GUIContent("Filter Usage: Filter1,Filter2,Filter3"));
-			EditorGUILayout.PropertyField(Filter, new GUIContent("Filter String:"));
+        {
+            Filters_FoldOut.boolValue = EditorGUILayout.Foldout(Filters_FoldOut.boolValue, "Filters:", boldFoldOut);
+
+            if (Filters_FoldOut.boolValue)
+            {
+                Filters.DoLayoutList();
+            }
+            CurrentFilterMask.intValue = EditorGUILayout.MaskField(new GUIContent("Filter:"), CurrentFilterMask.intValue, manager.Filters.ToArray());
+
 
 			Attributes_Debug.boolValue = EditorGUILayout.Toggle(new GUIContent("Debug Mode", "Enables editing attribute points"), Attributes_Debug.boolValue);
 
 			EditorGUILayout.BeginHorizontal();
 			visible.boolValue = EditorGUILayout.Foldout(visible.boolValue, listProperty.name, boldFoldOut);
-			if (Button("+", miniButton, GUILayout.Width(20)))
+            if (GUILayout.Button("+", miniButton, GUILayout.Width(20)))
 			{
 				Undo.RecordObject(manager, "Before Attribute Added");
-				manager.AddAttribute(new Attribute() { Name = string.Format("Attribute{0}", manager.Attributes.Count) });
+                manager.AddAttribute(new Attribute() { Name = string.Format("Attribute{0}", manager.AttributeCount) });
 			}
 			EditorGUILayout.EndHorizontal();
 
@@ -80,47 +125,17 @@ namespace SimpleLibrary
 			if(moveFrom >= 0 && moveTo >= 0 && moveFrom != moveTo)
 			{
 				Undo.RecordObject(manager, "Before Attribute Move");
-				Attribute temp = manager.Attributes[moveTo];
-				manager.Attributes[moveTo] = manager.Attributes[moveFrom];
-				manager.Attributes[moveFrom] = temp;
+				manager.Switch(moveFrom, moveTo);
 			}
 			moveFrom = -1;
 			moveTo = -1;
 		}
 
-		public bool FilterContains(string value)
-		{
-			if (string.IsNullOrEmpty(Filter.stringValue))
-				return false;
-
-			string[] filters = Filter.stringValue.Split(FilterSplitCharacter);
-			foreach (var filter in filters)
-			{
-				if (filter.Equals(value, System.StringComparison.Ordinal))
-					return true;
-			}
-			return false;
-		}
-
 		public void DrawAttribute(SerializedProperty attribute, int index)
 		{
-			Attribute currentAttribute = manager.Attributes[index];
-			if (SelectedFilterMode.enumValueIndex == 0)
-			{
-				//Show all
-			}
-			else if (SelectedFilterMode.enumValueIndex == 1)
-			{
-				//Only show filtered ones
-				if (!FilterContains(currentAttribute.FilterAttribute))
-					return;
-			}
-			else if (SelectedFilterMode.enumValueIndex == 2)
-			{
-				//Show all except filtered ones
-				if (FilterContains(currentAttribute.FilterAttribute))
-					return;
-			}
+			Attribute currentAttribute = manager.GetAttribute(index);
+            if (!FilterInFilters(currentAttribute.SelectedFilter, CurrentFilterMask.intValue))
+                return;
 			
 			bool enabledBefore = GUI.enabled;
 
@@ -142,32 +157,45 @@ namespace SimpleLibrary
 			SerializedProperty valueInfo = attribute.FindPropertyRelative("ValueInfo");
 			SerializedProperty FilterAttribute = attribute.FindPropertyRelative("FilterAttribute");
 
+
+            SerializedProperty SelectedFilter = attribute.FindPropertyRelative("SelectedFilter");
+
 			SerializedProperty value = valueInfo.FindPropertyRelative("Value");
 			SerializedProperty startValue = valueInfo.FindPropertyRelative("StartValue");
 			SerializedProperty valuePerPoint = valueInfo.FindPropertyRelative("ValuePerPoint");
 			SerializedProperty valuePerPointMultipliedByCurrentPoints = valueInfo.FindPropertyRelative("ValuePerPointMultipliedByCurrentPoints");
+
 
 			float progress = (points.intValue - startPoints.intValue) / (float)maxPoints.intValue;
 			if(maxPoints.intValue == 0)
 				progress = 1f;
 
 			EditorGUILayout.BeginHorizontal();
-			foldOut.boolValue = EditorGUILayout.Foldout(foldOut.boolValue, new GUIContent(string.Format("Attribute_<color=#5522aa>{0:00}</color>: <color=#008800>{1}</color>", index, name.stringValue)), boldFoldOut);
-			
+            //<color=#008800>{1}</color>
+			foldOut.boolValue = EditorGUILayout.Foldout(foldOut.boolValue, new GUIContent(string.Format("Attribute_<color=#5522aa>{0:00}</color>:", index)), boldFoldOut);
+
+            string tempName = EditorGUILayout.TextField(name.stringValue);
+            if (tempName != name.stringValue)
+            {
+                name.stringValue = tempName;
+            }
+
+            //name.stringValue = EditorGUILayout.TextField(name.stringValue);
+
 			GUI.enabled = index != 0;
-			if (Button("⤴", miniButton, GUILayout.Width(20)))
+            if (GUILayout.Button("⤴", miniButton, GUILayout.Width(20)))
 			{
 				moveFrom = index;
 				moveTo = index - 1;
 			}
 			GUI.enabled = index + 1 < Attributes.arraySize;
-			if (Button("⤵", miniButton, GUILayout.Width(20)))
+            if (GUILayout.Button("⤵", miniButton, GUILayout.Width(20)))
 			{
 				moveFrom = index;
 				moveTo = index + 1;
 			}
 			GUI.enabled = true;
-			if (Button("-", miniButton, GUILayout.Width(20)))
+            if (GUILayout.Button("-", miniButton, GUILayout.Width(20)))
 				removeAttribute = currentAttribute;
 			EditorGUILayout.EndHorizontal();
 
@@ -184,34 +212,34 @@ namespace SimpleLibrary
 					GUI.enabled = false;
 				if (!enabled.boolValue)
 				{
-					if (Button("Disabled", miniButton, GUILayout.Width(107)))
+                    if (GUILayout.Button("Disabled", miniButton, GUILayout.Width(107)))
 					{
 					}
 				}
 				else if (locked.boolValue)
 				{
-					if (Button("Locked", miniButton, GUILayout.Width(107)))
+                    if (GUILayout.Button("Locked", miniButton, GUILayout.Width(107)))
 					{
 					}
 				}
 				else
 				{
-					if (Button("-", miniButton, GUILayout.Width(20)))
+                    if (GUILayout.Button("-", miniButton, GUILayout.Width(20)))
 					{
 						Undo.RecordObject(manager, "Before Attribute RemovePoint");
 						currentAttribute.RemovePoint();
 					}
-					if (Button("+", miniButton, GUILayout.Width(20)))
+                    if (GUILayout.Button("+", miniButton, GUILayout.Width(20)))
 					{
 						Undo.RecordObject(manager, "Before Attribute AddPoint");
 						currentAttribute.AddPoint();
 					}
-					if (Button("0", miniButton, GUILayout.Width(20)))
+                    if (GUILayout.Button("0", miniButton, GUILayout.Width(20)))
 					{
 						Undo.RecordObject(manager, "Before Attribute ResetPoint");
 						currentAttribute.ResetPoints();
 					}
-					if (Button("max", miniButton, GUILayout.Width(35)))
+                    if (GUILayout.Button("max", miniButton, GUILayout.Width(35)))
 					{
 						Undo.RecordObject(manager, "Before Attribute MaximizePoints");
 						currentAttribute.MaximizePoints();
@@ -225,13 +253,15 @@ namespace SimpleLibrary
 
 			if (foldOut.boolValue)
 			{
+                /*
 				string tempName = EditorGUILayout.TextField(new GUIContent("Name", "The Name of this Attribute"), name.stringValue);
 				if (tempName != name.stringValue)
 				{
 					name.stringValue = tempName;
 				}
+                */
 
-				EditorGUILayout.PropertyField(FilterAttribute, new GUIContent("Filter String:"));
+                SelectedFilter.intValue = EditorGUILayout.Popup("Filter:", SelectedFilter.intValue, manager.Filters.ToArray());
 
 				enabled.boolValue = EditorGUILayout.Toggle(new GUIContent("Enabled", "Enables or Disables this Attribute in Game"), enabled.boolValue);
 				locked.boolValue = EditorGUILayout.Toggle(new GUIContent("Locked", "A locked Attribute can't be changed in Editor or Game"), locked.boolValue);
@@ -297,6 +327,7 @@ namespace SimpleLibrary
 			serializedObject.Update();
 
 			manager = (AttributeManager)target;
+            AttributeManager.Instance = manager;
 
 			if (!initiated)
 			{
@@ -328,10 +359,11 @@ namespace SimpleLibrary
 
 			ListIterator(Attributes, ref Attributes_FoldOut);
 
-
+            /*
 			NameList_FoldOut.boolValue = EditorGUILayout.Foldout(NameList_FoldOut.boolValue, "NameList:", boldFoldOut);
-			if(NameList_FoldOut.boolValue)
-				ReorderableListGUI.ListField(manager.AttributeNames, DrawString, ReorderableListFlags.HideAddButton | ReorderableListFlags.HideRemoveButtons | ReorderableListFlags.DisableReordering);
+            if (NameList_FoldOut.boolValue)
+                Names.DoLayoutList();
+            */
 
 			serializedObject.ApplyModifiedProperties();
 
@@ -340,63 +372,6 @@ namespace SimpleLibrary
 				manager.UpdateAttributeNamesList();
 				EditorUtility.SetDirty(manager);
 			}
-		}
-
-		public string DrawString(Rect rect, string value)
-		{
-			EditorGUI.LabelField(rect, value);
-			return value;
-		}
-
-		public void Label(string label, params GUILayoutOption[] options)
-		{
-			Label(label, GUI.skin.label, options);
-		}
-		public void Label(string label, GUIStyle style, params GUILayoutOption[] options)
-		{
-			GUILayout.Label(label, style, options);
-		}
-		public void TextField(string label, ref string value, params GUILayoutOption[] options)
-		{
-			TextField(label, ref value, GUI.skin.textField, options);
-		}
-		public void TextField(string label, ref string value, GUIStyle style, params GUILayoutOption[] options)
-		{
-			EditorGUILayout.TextField(label, value, style, options);
-		}
-		public bool Button(string label, params GUILayoutOption[] options)
-		{
-			return Button(label, GUI.skin.button, options);
-		}
-		public bool MiniButton(string label, params GUILayoutOption[] options)
-		{
-			return Button(label, EditorStyles.miniButton, options);
-		}
-		public bool Button(string label, GUIStyle style, params GUILayoutOption[] options)
-		{
-			return GUILayout.Button(label, style, options);
-		}
-		public void IntField(string label, ref int value, params GUILayoutOption[] options)
-		{
-			IntField(label, ref value, GUI.skin.textField, options);
-		}
-		public void IntField(string label, ref int value, GUIStyle style, params GUILayoutOption[] options)
-		{
-			value = EditorGUILayout.IntField(label, value, style, options);
-		}
-		public bool FloatField(GUIContent label, ref float value, params GUILayoutOption[] options)
-		{
-			return FloatField(label, ref value, GUI.skin.textField, options);
-		}
-		public bool FloatField(GUIContent label, ref float value, GUIStyle style, params GUILayoutOption[] options)
-		{
-			float temp = EditorGUILayout.FloatField(label, value, style, options);
-			if (temp != value)
-			{
-				value = temp;
-				return true;
-			}
-			return false;
 		}
 	}
 }
