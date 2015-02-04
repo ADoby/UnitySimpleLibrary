@@ -4,7 +4,18 @@ using System.Collections;
 
 
 [CustomEditor(typeof(InputController))]
-public class InputControllerEditor : Editor {
+public class InputControllerEditor : Editor 
+{
+
+    [MenuItem("GameObject/SimpleLibrary/SimpleInput")]
+    static void ToggleGameObjectActiveState()
+    {
+        GameObject go = new GameObject();
+        go.AddComponent<InputController>();
+        if (Selection.activeTransform != null)
+            go.transform.parent = Selection.activeTransform;
+        go.name = "SimpleInput";
+    }
 
     [SerializeField]
     private InputController myTarget;
