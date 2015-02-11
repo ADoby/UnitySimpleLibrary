@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace SimpleLibrary
 {
@@ -36,9 +37,29 @@ namespace SimpleLibrary
     #endregion
 
     [System.Serializable]
+    public class AttributeType
+    {
+        public int category = 0;
+        public int type = 0;
+    }
+
+    [System.Serializable]
+    public class AttributeCategory
+    {
+        public string name = "";
+        public List<string> Types = new List<string>();
+
+        //EDITOR
+        public bool foldOut = false;
+    }
+
+    [System.Serializable]
     public class Attribute
     {
         public string Name = "";
+
+        public AttributeType AttrType;
+
         public bool Enabled = true;
 
         //Can't be changed from outside
@@ -166,8 +187,6 @@ namespace SimpleLibrary
         public bool FoldOut = false;
         public bool Point_FoldOut = false;
         public bool Value_FoldOut = false;
-        public int SelectedName = 0;
-        public int SelectedFilter = 0;
         #endregion
 
         public override string ToString()

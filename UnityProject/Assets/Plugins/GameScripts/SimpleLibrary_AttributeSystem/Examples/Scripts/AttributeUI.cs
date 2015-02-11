@@ -9,15 +9,14 @@ namespace SimpleLibrary
         public Text mainText;
         public Button Reset, Maximize, Decrease, Increase;
 
-        public FilterAttribute AttributeFilter;
-        public NameAttribute AttributeName;
+        public AttributeType AttrType;
 
         public virtual void UpdateUI(Attribute attribute)
         {
             if (attribute == null)
                 return;
 
-            mainText.text = string.Format("{0}:{1}\n{2}/{3}", AttributeManager.Instance.GetFilter(attribute.SelectedFilter), attribute.Name, attribute.Points, attribute.MaxPoints);
+            mainText.text = string.Format("{0}:{1}\n{2}/{3}", AttributeManager.Instance.GetFilter(attribute.AttrType.category), attribute.Name, attribute.Points, attribute.MaxPoints);
 
             Maximize.interactable = !attribute.IsFull;
             Decrease.interactable = !attribute.IsEmpty;
@@ -27,28 +26,28 @@ namespace SimpleLibrary
 
         void Start()
         {
-            UpdateUI(AttributeManager.Instance.GetAttribute(AttributeFilter.Value, AttributeName.Value));
+            UpdateUI(AttributeManager.Instance.GetAttribute(AttrType.category, AttrType.type));
         }
 
         public void DecreasePoints()
         {
-            AttributeManager.Instance.GetAttribute(AttributeFilter.Value, AttributeName.Value).RemovePoint();
-            UpdateUI(AttributeManager.Instance.GetAttribute(AttributeFilter.Value, AttributeName.Value));
+            AttributeManager.Instance.GetAttribute(AttrType.category, AttrType.type).RemovePoint();
+            UpdateUI(AttributeManager.Instance.GetAttribute(AttrType.category, AttrType.type));
         }
         public void IncreasePoints()
         {
-            AttributeManager.Instance.GetAttribute(AttributeFilter.Value, AttributeName.Value).AddPoint();
-            UpdateUI(AttributeManager.Instance.GetAttribute(AttributeFilter.Value, AttributeName.Value));
+            AttributeManager.Instance.GetAttribute(AttrType.category, AttrType.type).AddPoint();
+            UpdateUI(AttributeManager.Instance.GetAttribute(AttrType.category, AttrType.type));
         }
         public void MaximizePoints()
         {
-            AttributeManager.Instance.GetAttribute(AttributeFilter.Value, AttributeName.Value).MaximizePoints();
-            UpdateUI(AttributeManager.Instance.GetAttribute(AttributeFilter.Value, AttributeName.Value));
+            AttributeManager.Instance.GetAttribute(AttrType.category, AttrType.type).MaximizePoints();
+            UpdateUI(AttributeManager.Instance.GetAttribute(AttrType.category, AttrType.type));
         }
         public void ResetPoints()
         {
-            AttributeManager.Instance.GetAttribute(AttributeFilter.Value, AttributeName.Value).ResetPoints();
-            UpdateUI(AttributeManager.Instance.GetAttribute(AttributeFilter.Value, AttributeName.Value));
+            AttributeManager.Instance.GetAttribute(AttrType.category, AttrType.type).ResetPoints();
+            UpdateUI(AttributeManager.Instance.GetAttribute(AttrType.category, AttrType.type));
         }
     }
 }

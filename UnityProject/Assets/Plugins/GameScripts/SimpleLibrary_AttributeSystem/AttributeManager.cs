@@ -4,16 +4,7 @@ using System.Collections.Generic;
 
 namespace SimpleLibrary
 {
-    [System.Serializable]
-    public class FilterAttribute
-    {
-        public int Value = 0;
-    }
-    [System.Serializable]
-    public class NameAttribute
-    {
-        public int Value = 0;
-    }
+    
 
     public class AttributeManager : MonoBehaviour
     {
@@ -71,9 +62,70 @@ namespace SimpleLibrary
 
         #region UI
         public bool Filters_FoldOut = false;
-        [SerializeField]
-        public List<string> Filters = new List<string>();
         public int CurrentFilterMask = 0;
+
+        [SerializeField]
+        public List<AttributeCategory> Categories = new List<AttributeCategory>();
+        [SerializeField]
+        public List<string> CategoryNames = new List<string>();
+
+        [ContextMenu("Reset Categories")]
+        public void ResetCategories()
+        {
+            Categories.Clear();
+            CategoryNames.Clear();
+        }
+
+        public void UpdateCategoryNames()
+        {
+            CategoryNames.Clear();
+            foreach (var attrCat in Categories)
+            {
+                CategoryNames.Add(attrCat.name);
+            }
+        }
+
+        public void RenameCategory(int index, string name)
+        {
+            if (index < 0 || index >= Categories.Count)
+                return;
+            Categories[index].name = name;
+            UpdateCategoryNames();
+        }
+        public void MoveCategory(int from, int to)
+        {
+            if (from < 0 || from > Categories.Count)
+                return;
+            if (to < 0 || to > Categories.Count)
+                return;
+
+            AttributeCategory tmp = Categories[to];
+            Categories[to] = Categories[from];
+            Categories[from] = tmp;
+            UpdateCategoryNames();
+        }
+
+        public void AddCategory()
+        {
+            AttributeCategory category = new AttributeCategory();
+            Categories.Add(category);
+            UpdateCategoryNames();
+        }
+        public void RemoveCategory(int index)
+        {
+            if (index > 0 && index < Categories.Count)
+                Categories.RemoveAt(index);
+            UpdateCategoryNames();
+        }
+        public void RemoveType(int catIndex, int typeIndex)
+        {
+            if (catIndex < 0 || catIndex >= Categories.Count || typeIndex < 0)
+                return;
+            AttributeCategory category = Categories[catIndex];
+            if (typeIndex >= category.Types.Count)
+                return;
+            category.Types.RemoveAt(typeIndex);
+        }
 
         [SerializeField]
         public List<string> AttributeNames = new List<string>();
@@ -89,7 +141,7 @@ namespace SimpleLibrary
             string filterKey = string.Empty;
             foreach (var attribute in Attributes)
             {
-                filterKey = Filters[attribute.SelectedFilter];
+                filterKey = CategoryNames[attribute.AttrType.category];
                 if (!AttributeDictionary.ContainsKey(filterKey))
                 {
                     AttributeDictionary.Add(filterKey, new Dictionary<string, Attribute>());
@@ -182,15 +234,15 @@ namespace SimpleLibrary
 
         public int GetFilterIndex(string filter)
         {
-            if (!Filters.Contains(filter))
+            if (!CategoryNames.Contains(filter))
                 return -1;
-            return Filters.IndexOf(filter);
+            return CategoryNames.IndexOf(filter);
         }
         public string GetFilter(int index)
         {
-            if (index < 0 || index >= Filters.Count)
+            if (index < 0 || index >= CategoryNames.Count)
                 return string.Empty;
-            return Filters[index];
+            return CategoryNames[index];
         }
     }
 }

@@ -40,8 +40,8 @@ namespace SimpleLibrary
                 }
                 if (attributeUI)
                 {
-                    attributeUI.AttributeFilter.Value = attribute.SelectedFilter;
-                    attributeUI.AttributeName.Value = AttributeManager.Instance.GetNameIndex(attribute.Name);
+                    attributeUI.AttrType.category = attribute.AttrType.category;
+                    attributeUI.AttrType.type = AttributeManager.Instance.GetNameIndex(attribute.Name);
                 }
                 index++;
             }
