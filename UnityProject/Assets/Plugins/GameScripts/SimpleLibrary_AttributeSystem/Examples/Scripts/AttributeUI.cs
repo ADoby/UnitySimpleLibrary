@@ -9,19 +9,19 @@ namespace SimpleLibrary
         public Text mainText;
         public Button Reset, Maximize, Decrease, Increase;
 
-        public AttributeType AttrType;
+        public AttributeInfo AttrType;
 
         public virtual void UpdateUI(Attribute attribute)
         {
             if (attribute == null)
                 return;
 
-            mainText.text = string.Format("{0}:{1}\n{2}/{3}", AttributeManager.Instance.GetFilter(attribute.AttrType.category), attribute.Name, attribute.Points, attribute.MaxPoints);
+            mainText.text = string.Format("{0}-{1}:{2}\n{3}/{4}", AttributeManager.Instance.GetCategoryName(attribute.AttrInfo.category), AttributeManager.Instance.GetAttributeType(attribute.AttrInfo.category, attribute.AttrInfo.type), attribute.Name, attribute.Points, attribute.MaxPoints);
 
             Maximize.interactable = !attribute.IsFull;
             Decrease.interactable = !attribute.IsEmpty;
             Increase.interactable = !attribute.IsFull;
-            Reset.interactable = !attribute.IsEmpty;
+            Reset.interactable = !attribute.IsReset;
         }
 
         void Start()

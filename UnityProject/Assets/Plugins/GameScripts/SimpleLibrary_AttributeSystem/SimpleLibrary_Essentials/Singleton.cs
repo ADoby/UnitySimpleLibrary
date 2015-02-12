@@ -28,7 +28,7 @@ namespace SimpleLibrary
                 }
                 return (ChildType)instance;
             }
-            protected set
+            set
             {
                 instance = value;
             }

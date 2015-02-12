@@ -33,14 +33,43 @@ namespace SimpleLibrary
         {
             Value -= ValuePerPoint + (points - 1) * ValuePerPointMultipliedByCurrentPoints;
         }
+
+		public float Calculated(int points)
+		{
+			float value = StartValue;
+			for (int i = 1; i <= points; i++)
+			{
+				value += ValuePerPoint + points * ValuePerPointMultipliedByCurrentPoints;
+			}
+			return value;
+		}
     }
     #endregion
 
     [System.Serializable]
-    public class AttributeType
+    public class AttributeInfo
     {
         public int category = 0;
         public int type = 0;
+
+		//Editor
+		public bool FoldOut = false;
+
+		public float Value
+		{
+			get
+			{
+				if (AttributeManager.Instance == null)
+					return 0f;
+				if (AttributeManager.IGetAttribute(this) == null)
+					return 0f;
+				return AttributeManager.IGetAttribute(this).Value;
+			}
+		}
+		public float GetValue()
+		{
+			return Value;
+		}
     }
 
     [System.Serializable]
@@ -58,7 +87,7 @@ namespace SimpleLibrary
     {
         public string Name = "";
 
-        public AttributeType AttrType;
+        public AttributeInfo AttrInfo;
 
         public bool Enabled = true;
 
@@ -74,6 +103,7 @@ namespace SimpleLibrary
 
         #region POINTS
         public int Points = 0;
+		public int MinPoints = 0;
         public int StartPoints = 0;
         public int MaxPoints = 100;
 
@@ -88,9 +118,16 @@ namespace SimpleLibrary
         {
             get
             {
-                return Points == StartPoints;
+				return Points == MinPoints;
             }
         }
+		public bool IsReset
+		{
+			get
+			{
+				return Points == StartPoints;
+			}
+		}
 
         public virtual bool ResetPoints()
         {
@@ -113,7 +150,7 @@ namespace SimpleLibrary
         }
         public virtual bool RemovePoint()
         {
-            if (!Enabled || Locked || Points <= StartPoints)
+            if (!Enabled || Locked || Points <= MinPoints)
                 return false;
             Points--;
             RecalculateValue();
@@ -167,6 +204,11 @@ namespace SimpleLibrary
             ValueInfo.Recalculate(Points);
         }
 
+		public float GetCalculatedValue(int points)
+		{
+			return ValueInfo.Calculated(points);
+		}
+
         #endregion
 
         #region EVENTS
@@ -187,6 +229,7 @@ namespace SimpleLibrary
         public bool FoldOut = false;
         public bool Point_FoldOut = false;
         public bool Value_FoldOut = false;
+		public bool DebugMode = false;
         #endregion
 
         public override string ToString()

@@ -1,4 +1,6 @@
-﻿using UnityEditor;
+﻿#if UNITY_EDITOR
+
+using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
 using System.Collections;
@@ -10,75 +12,33 @@ namespace SimpleLibrary
 	[CustomEditor(typeof(AttributeManager))]
 	public class AttributeManager_Editor : Editor
 	{
+		const float AddAttributeButtonWidth = 95f;
+
+        const float CategoryFoldOutWidth = 95f;
+        const int CategorySmallButtonCount = 3;
+        const float TypeFoldOutWidth = 90f;
+        const int TypeSmallButtonCount = 3;
+        const float SmallButtonWidth = 20f;
+
+        const float AddCategoryButtonWidth = 100f;
+        const float AddTypeButtonWidth = 70f;
 
 		AttributeManager manager;
 
-		SerializedProperty Attributes_FoldOut;
-		SerializedProperty NameList_FoldOut;
 		SerializedProperty Attributes_Debug;
-		SerializedProperty SelectedFilterMode;
-		SerializedProperty Filter;
+
 		SerializedProperty Attributes;
-        SerializedProperty Filters_FoldOut;
         SerializedProperty CurrentFilterMask;
 
-        SerializedProperty Categories;
+        SerializedProperty EditorUIState;
 
-        ReorderableList Names;
         ReorderableList CategoryNames;
 
 
         int AttributeMarginX = 20;
-        GUIStyle labelMargin, textMargin, buttonMargin, miniButton, boldLabel, boldFoldOut, boldMiniButton;
-		bool initiated = false;
-		char FilterSplitCharacter = ',';
+        GUIStyle labelMargin, textMargin, buttonMargin, miniButton, boldFoldOut, boldMiniButton;
         Attribute removeAttribute = null;
         int moveFrom = 0, moveTo = 0;
-
-		void OnEnable()
-		{
-            manager = (AttributeManager)target;
-            AttributeManager.Instance = manager;
-
-			initiated = false;
-
-			Attributes = serializedObject.FindProperty("Attributes");
-			Attributes_FoldOut = serializedObject.FindProperty("Attributes_FoldOut");
-			NameList_FoldOut = serializedObject.FindProperty("NameList_FoldOut");
-			Attributes_Debug = serializedObject.FindProperty("Attributes_Debug");
-			SelectedFilterMode = serializedObject.FindProperty("SelectedFilterMode");
-            Filters_FoldOut = serializedObject.FindProperty("Filters_FoldOut");
-            CurrentFilterMask = serializedObject.FindProperty("CurrentFilterMask");
-
-            Categories = serializedObject.FindProperty("Categories");
-
-            Names = new ReorderableList(serializedObject, serializedObject.FindProperty("AttributeNames"), false, false, false, false);
-            Names.drawElementCallback =
-                (Rect rect, int index, bool isActive, bool isFocused) =>
-                {
-                    var element = Names.serializedProperty.GetArrayElementAtIndex(index);
-                    rect.y += 1f;
-                    rect.height -= 2f;
-                    EditorGUI.LabelField(rect, element.stringValue);
-                };
-
-
-            CategoryNames = new ReorderableList(serializedObject, serializedObject.FindProperty("CategoryNames"));
-
-            CategoryNames.drawElementCallback =
-                (Rect rect, int index, bool isActive, bool isFocused) =>
-                {
-                    var element = CategoryNames.serializedProperty.GetArrayElementAtIndex(index);
-                    rect.y += 1f;
-                    rect.height -= 2f;
-                    element.stringValue = EditorGUI.TextField(rect, element.stringValue);
-                };
-            CategoryNames.drawHeaderCallback = (Rect rect) =>
-            {
-                EditorGUI.LabelField(rect, "Filters");
-            };
-            CategoryNames.onChangedCallback = FiltersChanged;
-		}
 
         public void FiltersChanged(ReorderableList list)
         {
@@ -90,21 +50,31 @@ namespace SimpleLibrary
             return ((currentFilters & (1 << filter)) > 0);
         }
 
-		public void ListIterator(SerializedProperty listProperty, ref SerializedProperty visible)
+		public void ListIterator(SerializedProperty listProperty)
         {
             EditorGUILayout.BeginHorizontal();
-            Filters_FoldOut.boolValue = EditorGUILayout.Foldout(Filters_FoldOut.boolValue, "Categories:", boldFoldOut);
-
-            if (GUILayout.Button("+", miniButton, GUILayout.Width(20)))
+            if (GUILayout.Button("Categories"))
             {
-                Undo.RecordObject(manager, "Before Attribute AddPoint");
-                manager.AddCategory();
-                EditorUtility.SetDirty(manager);
+                EditorUIState.intValue = 0;
+            }
+            if (GUILayout.Button("Attributes"))
+            {
+                EditorUIState.intValue = 1;
             }
             EditorGUILayout.EndHorizontal();
 
-            if (Filters_FoldOut.boolValue)
+            //Show Categories
+            if (EditorUIState.intValue == 0)
             {
+                EditorGUILayout.BeginHorizontal();
+                if (GUILayout.Button("New Category", GUILayout.Width(AddCategoryButtonWidth)))
+                {
+                    Undo.RecordObject(manager, "Before New Category");
+                    manager.AddCategory();
+                    EditorUtility.SetDirty(manager);
+                }
+                EditorGUILayout.EndHorizontal();
+
                 int catIndex = 0;
                 moveFrom = -1;
                 moveTo = -1;
@@ -113,26 +83,23 @@ namespace SimpleLibrary
                 EditorGUI.indentLevel++;
                 foreach (var attrCategory in manager.Categories)
                 {
-                    float foldOutWidth = 90f;
-                    float buttonWidth = 20f;
-                    int buttonCount = 4;
-
                     Rect rect = GUILayoutUtility.GetRect(18, SimpleEditor.EditorLineHeight);
                     Rect rect1 = rect;
-                    rect1.width = foldOutWidth;
+                    rect1.width = CategoryFoldOutWidth;
                     Rect rect2 = rect1;
-                    rect2.width = rect.width - foldOutWidth - buttonCount * buttonWidth;
-                    rect2.x += foldOutWidth;
+                    rect2.width = rect.width - CategoryFoldOutWidth - CategorySmallButtonCount * SmallButtonWidth - AddTypeButtonWidth;
+                    rect2.x += CategoryFoldOutWidth;
 
                     Rect rect3 = rect2;
-                    rect3.width = buttonWidth;
+                    rect3.width = SmallButtonWidth;
                     rect3.x += rect2.width;
                     Rect rect4 = rect3;
-                    rect4.x += buttonWidth;
+                    rect4.x += SmallButtonWidth;
                     Rect rect5 = rect4;
-                    rect5.x += buttonWidth;
+                    rect5.x += SmallButtonWidth;
                     Rect rect6 = rect5;
-                    rect6.x += buttonWidth;
+                    rect6.width = AddTypeButtonWidth;
+                    rect6.x += SmallButtonWidth;
 
 
                     attrCategory.foldOut = EditorGUI.Foldout(rect1, attrCategory.foldOut, new GUIContent(string.Format("Category_{0:00}:", catIndex)), boldFoldOut);
@@ -140,7 +107,7 @@ namespace SimpleLibrary
                     string tempName = EditorGUI.TextField(rect2, attrCategory.name);
                     if (tempName != attrCategory.name)
                     {
-                        Undo.RecordObject(manager, "Before Attribute AddPoint");
+                        Undo.RecordObject(manager, "Before Category Name Changed");
                         manager.RenameCategory(catIndex, tempName);
                         EditorUtility.SetDirty(manager);
                     }
@@ -161,10 +128,10 @@ namespace SimpleLibrary
                     if (GUI.Button(rect5, "-", miniButton))
                         deleteCat = catIndex;
 
-                    if (GUI.Button(rect6, "+", miniButton))
+                    if (GUI.Button(rect6, "Add Type", miniButton))
                     {
-                        Undo.RecordObject(manager, "Before Attribute AddPoint");
-                        attrCategory.Types.Add("");
+                        Undo.RecordObject(manager, "Before New Type");
+						manager.AddType(catIndex, "");
                         EditorUtility.SetDirty(manager);
                     }
 
@@ -180,25 +147,21 @@ namespace SimpleLibrary
                         foreach (var attrType in attrCategory.Types)
                         {
                             rect = GUILayoutUtility.GetRect(18, SimpleEditor.EditorLineHeight);
-
-                            
-                            foldOutWidth = 90f;
-                            buttonCount = 3;
-
+                                
                             rect1 = rect;
-                            rect1.width = foldOutWidth;
+                            rect1.width = TypeFoldOutWidth;
 
                             rect2 = rect;
-                            rect2.width -= foldOutWidth + buttonCount * buttonWidth;
-                            rect2.x += foldOutWidth;
+                            rect2.width -= TypeFoldOutWidth + TypeSmallButtonCount * SmallButtonWidth;
+                            rect2.x += TypeFoldOutWidth;
 
                             rect3 = rect2;
-                            rect3.width = buttonWidth;
+                            rect3.width = SmallButtonWidth;
                             rect3.x += rect2.width;
                             rect4 = rect3;
-                            rect4.x += buttonWidth;
+                            rect4.x += SmallButtonWidth;
                             rect5 = rect4;
-                            rect5.x += buttonWidth;
+                            rect5.x += SmallButtonWidth;
 
 
                             EditorGUI.LabelField(rect1, new GUIContent(string.Format("Type_{0:00}:", typeIndex)));
@@ -206,8 +169,8 @@ namespace SimpleLibrary
                             tempName = EditorGUI.TextField(rect2, attrType);
                             if (tempName != attrType)
                             {
-                                Undo.RecordObject(manager, "Before Attribute AddPoint");
-                                attrCategory.Types[typeIndex] = tempName;
+                                Undo.RecordObject(manager, "Before Rename Type");
+								manager.RenameType(catIndex, typeIndex, tempName);
                                 EditorUtility.SetDirty(manager);
                             }
 
@@ -233,16 +196,14 @@ namespace SimpleLibrary
 
                         if (typeDelete >= 0)
                         {
-                            Undo.RecordObject(manager, "Before Attribute AddPoint");
-                            attrCategory.Types.RemoveAt(typeDelete);
+                            Undo.RecordObject(manager, "Before Remove Type");
+							manager.RemoveType(catIndex, typeDelete);
                             EditorUtility.SetDirty(manager);
                         }
-                        if(moveFrom >= 0 && moveTo >= 0)
+                        if (moveTypeFrom >= 0 && moveTypeTo >= 0)
                         {
-                            Undo.RecordObject(manager, "Before Attribute AddPoint");
-                            string tmpType = attrCategory.Types[moveTypeTo];
-                            attrCategory.Types[moveTypeTo] = attrCategory.Types[moveTypeFrom];
-                            attrCategory.Types[moveTypeFrom] = tmpType;
+                            Undo.RecordObject(manager, "Before Move Type");
+							manager.MoveType(catIndex, moveTypeFrom, moveTypeTo);
                             EditorUtility.SetDirty(manager);
                         }
                     }
@@ -265,56 +226,54 @@ namespace SimpleLibrary
                     EditorUtility.SetDirty(manager);
                 }
 
-                //Filters.DoLayoutList();
+                
+                moveFrom = -1;
+                moveTo = -1;
             }
-            moveFrom = -1;
-            moveTo = -1;
-
-            //CurrentFilterMask.intValue = EditorGUILayout.MaskField(new GUIContent("Filter:"), CurrentFilterMask.intValue, manager.Filters.ToArray());
-            CurrentFilterMask.intValue = EditorGUILayout.MaskField(new GUIContent("Filter:"), CurrentFilterMask.intValue, manager.CategoryNames.ToArray<string>());
+            else if (EditorUIState.intValue == 1)
+            {
+                CurrentFilterMask.intValue = EditorGUILayout.MaskField(new GUIContent("Show Categories:"), CurrentFilterMask.intValue, manager.CategoryNames.ToArray<string>());
 
 
-			Attributes_Debug.boolValue = EditorGUILayout.Toggle(new GUIContent("Debug Mode", "Enables editing attribute points"), Attributes_Debug.boolValue);
+                Attributes_Debug.boolValue = EditorGUILayout.Toggle(new GUIContent("Debug Mode", "Enables editing attribute points"), Attributes_Debug.boolValue);
 
-			EditorGUILayout.BeginHorizontal();
-			visible.boolValue = EditorGUILayout.Foldout(visible.boolValue, listProperty.name, boldFoldOut);
-            if (GUILayout.Button("+", miniButton, GUILayout.Width(20)))
-			{
-				Undo.RecordObject(manager, "Before Attribute Added");
-                manager.AddAttribute(new Attribute() { Name = string.Format("Attribute{0}", manager.AttributeCount) });
-			}
-			EditorGUILayout.EndHorizontal();
+                EditorGUILayout.BeginHorizontal();
+                if (GUILayout.Button("New Attribute", GUILayout.Width(AddAttributeButtonWidth)))
+                {
+                    Undo.RecordObject(manager, "Before Attribute Added");
+                    manager.AddAttribute(new Attribute() { Name = string.Format("Attribute{0}", manager.AttributeCount) });
+                }
+                EditorGUILayout.EndHorizontal();
 
-			if (visible.boolValue)
-			{
-				EditorGUI.indentLevel++;
-				for (int i = 0; i < listProperty.arraySize; i++)
-				{
-					SerializedProperty attribute = listProperty.GetArrayElementAtIndex(i);
-					DrawAttribute(attribute, i);
-				}
-				EditorGUI.indentLevel--;
-			}
+                //EditorGUI.indentLevel++;
+                for (int i = 0; i < listProperty.arraySize; i++)
+                {
+                    SerializedProperty attribute = listProperty.GetArrayElementAtIndex(i);
+                    DrawAttribute(attribute, i);
+                }
+                //EditorGUI.indentLevel--;
+                
 
-			if (removeAttribute != null)
-			{
-				Undo.RecordObject(manager, "Before Attribute Removed");
-				manager.RemoveAttribute(removeAttribute);
-				removeAttribute = null;
-			}
-			if(moveFrom >= 0 && moveTo >= 0 && moveFrom != moveTo)
-			{
-				Undo.RecordObject(manager, "Before Attribute Move");
-				manager.Switch(moveFrom, moveTo);
-			}
-			moveFrom = -1;
-			moveTo = -1;
+                if (removeAttribute != null)
+                {
+                    Undo.RecordObject(manager, "Before Attribute Removed");
+                    manager.RemoveAttribute(removeAttribute);
+                    removeAttribute = null;
+                }
+                if (moveFrom >= 0 && moveTo >= 0 && moveFrom != moveTo)
+                {
+                    Undo.RecordObject(manager, "Before Attribute Move");
+                    manager.MoveAttribute(moveFrom, moveTo);
+                }
+                moveFrom = -1;
+                moveTo = -1;
+            }
 		}
 
 		public void DrawAttribute(SerializedProperty attribute, int index)
 		{
-			Attribute currentAttribute = manager.GetAttribute(index);
-            if (!FilterInFilters(currentAttribute.AttrType.category, CurrentFilterMask.intValue))
+			Attribute currentAttribute = manager.GetAttributeByIndex(index);
+            if (!FilterInFilters(currentAttribute.AttrInfo.category, CurrentFilterMask.intValue))
                 return;
 			
 			bool enabledBefore = GUI.enabled;
@@ -331,19 +290,15 @@ namespace SimpleLibrary
 			//PointSettings
 			SerializedProperty points = attribute.FindPropertyRelative("Points");
 			SerializedProperty startPoints = attribute.FindPropertyRelative("StartPoints");
+			SerializedProperty minPoints = attribute.FindPropertyRelative("MinPoints");
 			SerializedProperty maxPoints = attribute.FindPropertyRelative("MaxPoints");
 
 			//ValueSettings
 			SerializedProperty valueInfo = attribute.FindPropertyRelative("ValueInfo");
-			SerializedProperty FilterAttribute = attribute.FindPropertyRelative("FilterAttribute");
 
-
-            SerializedProperty AttrType = attribute.FindPropertyRelative("AttrType");
-            SerializedProperty category = AttrType.FindPropertyRelative("category");
-            SerializedProperty type = AttrType.FindPropertyRelative("type");
-
-
-            SerializedProperty SelectedFilter = attribute.FindPropertyRelative("SelectedFilter");
+			SerializedProperty AttrInfo = attribute.FindPropertyRelative("AttrInfo");
+            SerializedProperty category = AttrInfo.FindPropertyRelative("category");
+            SerializedProperty type = AttrInfo.FindPropertyRelative("type");
 
 			SerializedProperty value = valueInfo.FindPropertyRelative("Value");
 			SerializedProperty startValue = valueInfo.FindPropertyRelative("StartValue");
@@ -351,11 +306,11 @@ namespace SimpleLibrary
 			SerializedProperty valuePerPointMultipliedByCurrentPoints = valueInfo.FindPropertyRelative("ValuePerPointMultipliedByCurrentPoints");
 
 
-			float progress = (points.intValue - startPoints.intValue) / (float)maxPoints.intValue;
+			float progress = (points.intValue - minPoints.intValue) / (float)(maxPoints.intValue - minPoints.intValue);
 			if(maxPoints.intValue == 0)
 				progress = 1f;
 
-            float foldOutWidth = 90f;
+            float foldOutWidth = 95f;
             float buttonWidth = 20f;
             int buttonCount = 3;
 
@@ -376,7 +331,6 @@ namespace SimpleLibrary
             Rect rect6 = rect5;
             rect6.x += buttonWidth;
 
-            //<color=#008800>{1}</color>
 			foldOut.boolValue = EditorGUI.Foldout(rect1, foldOut.boolValue, new GUIContent(string.Format("Attribute_{0:00}:", index)), boldFoldOut);
 
             string tempName = EditorGUI.TextField(rect2, name.stringValue);
@@ -384,8 +338,6 @@ namespace SimpleLibrary
             {
                 name.stringValue = tempName;
             }
-
-            //name.stringValue = EditorGUILayout.TextField(name.stringValue);
 
 			GUI.enabled = index != 0;
             if (GUI.Button(rect3, "⤴", miniButton))
@@ -439,7 +391,7 @@ namespace SimpleLibrary
 						Undo.RecordObject(manager, "Before Attribute AddPoint");
 						currentAttribute.AddPoint();
 					}
-                    if (GUILayout.Button("0", miniButton, GUILayout.Width(20)))
+                    if (GUILayout.Button("reset", miniButton, GUILayout.Width(35)))
 					{
 						Undo.RecordObject(manager, "Before Attribute ResetPoint");
 						currentAttribute.ResetPoints();
@@ -470,9 +422,6 @@ namespace SimpleLibrary
                 {
                     EditorGUILayout.LabelField("First: Create some Categories and Types");
                 }
-
-                //SelectedFilter.intValue = EditorGUILayout.Popup("Filter:", SelectedFilter.intValue, manager.Filters.ToArray());
-
 				enabled.boolValue = EditorGUILayout.Toggle(new GUIContent("Enabled", "Enables or Disables this Attribute in Game"), enabled.boolValue);
 				locked.boolValue = EditorGUILayout.Toggle(new GUIContent("Locked", "A locked Attribute can't be changed in Editor or Game"), locked.boolValue);
 
@@ -482,27 +431,24 @@ namespace SimpleLibrary
 				{
 					//AttributePoints
 					ProgressBar(progress, string.Format("Current Points: {0}/{1}", points.intValue, maxPoints.intValue, value.floatValue), 20, 0, 18);
+					
+					minPoints.intValue = EditorGUILayout.IntField(new GUIContent("Min Points:", ""), minPoints.intValue);
+					maxPoints.intValue = EditorGUILayout.IntField(new GUIContent("Max Points:", ""), maxPoints.intValue);
 
-					int newStartPoints = EditorGUILayout.IntField(new GUIContent("Start Points:", ""), startPoints.intValue);
+					int newStartPoints = EditorGUILayout.IntSlider(new GUIContent("Start Points:", ""), startPoints.intValue, minPoints.intValue, maxPoints.intValue);
+
 					if (points.intValue == startPoints.intValue)
 						points.intValue = newStartPoints;
 					startPoints.intValue = newStartPoints;
-
-					maxPoints.intValue = EditorGUILayout.IntField(new GUIContent("Max Points:", ""), maxPoints.intValue);
 				}
 
-				if (startPoints.intValue < 0)
-					startPoints.intValue = 0;
+				if (minPoints.intValue < 0)
+					minPoints.intValue = 0;
 
-				if (maxPoints.intValue < startPoints.intValue)
-					maxPoints.intValue = startPoints.intValue;
+				if (maxPoints.intValue < minPoints.intValue)
+					maxPoints.intValue = minPoints.intValue;
 
-				if (points.intValue < startPoints.intValue)
-					points.intValue = startPoints.intValue;
-				if (points.intValue > maxPoints.intValue)
-					points.intValue = maxPoints.intValue;
 
-				//AttributeValue
 				value_FoldOut.boolValue = EditorGUILayout.Foldout(value_FoldOut.boolValue, new GUIContent(string.Format("Value(<color=#aa5522>{0:0.00}</color>):", value.floatValue)), boldFoldOut);
 
 				if (value_FoldOut.boolValue)
@@ -537,49 +483,63 @@ namespace SimpleLibrary
 		{
 			serializedObject.Update();
 
-			if (!initiated)
+			manager = (AttributeManager)target;
+			AttributeManager.Instance = manager;
+
+			EditorUIState = serializedObject.FindProperty("EditorUIState");
+
+			Attributes_Debug = serializedObject.FindProperty("Attributes_Debug");
+
+			Attributes = serializedObject.FindProperty("Attributes");
+			CurrentFilterMask = serializedObject.FindProperty("CurrentFilterMask");
+
+
+
+			CategoryNames = new ReorderableList(serializedObject, serializedObject.FindProperty("CategoryNames"));
+
+			CategoryNames.drawElementCallback =
+				(Rect rect, int index, bool isActive, bool isFocused) =>
+				{
+					var element = CategoryNames.serializedProperty.GetArrayElementAtIndex(index);
+					rect.y += 1f;
+					rect.height -= 2f;
+					element.stringValue = EditorGUI.TextField(rect, element.stringValue);
+				};
+			CategoryNames.drawHeaderCallback = (Rect rect) =>
 			{
-				initiated = true;
-				labelMargin = new GUIStyle(EditorStyles.label);
-				textMargin = new GUIStyle(EditorStyles.textField);
-				buttonMargin = new GUIStyle(GUI.skin.button);
-				miniButton = new GUIStyle(EditorStyles.miniButton);
-				boldLabel = new GUIStyle(EditorStyles.boldLabel);
-				boldFoldOut = new GUIStyle(EditorStyles.foldout);
-				boldMiniButton = new GUIStyle(EditorStyles.miniButton);
+				EditorGUI.LabelField(rect, "Filters");
+			};
+			CategoryNames.onChangedCallback = FiltersChanged;
 
-				labelMargin.margin = new RectOffset(AttributeMarginX, 0, 0, 0);
-				textMargin.margin = new RectOffset(AttributeMarginX, 0, 0, 0);
-				buttonMargin.margin = new RectOffset(AttributeMarginX, 0, 0, 0);
+			labelMargin = new GUIStyle(EditorStyles.label);
+			textMargin = new GUIStyle(EditorStyles.textField);
+			buttonMargin = new GUIStyle(GUI.skin.button);
+			miniButton = new GUIStyle(EditorStyles.miniButton);
+			boldFoldOut = new GUIStyle(EditorStyles.foldout);
+			boldMiniButton = new GUIStyle(EditorStyles.miniButton);
 
-				boldFoldOut.fontStyle = FontStyle.Bold;
-				boldFoldOut.richText = true;
+			labelMargin.margin = new RectOffset(AttributeMarginX, 0, 0, 0);
+			textMargin.margin = new RectOffset(AttributeMarginX, 0, 0, 0);
+			buttonMargin.margin = new RectOffset(AttributeMarginX, 0, 0, 0);
 
-				boldMiniButton.fontStyle = FontStyle.Bold;
-				boldMiniButton.alignment = TextAnchor.MiddleCenter;
-				boldMiniButton.padding = new RectOffset(0, 2, 0, 2);
-				boldMiniButton.fontSize = 12;
+			boldFoldOut.fontStyle = FontStyle.Bold;
+			boldFoldOut.richText = true;
 
-				miniButton.alignment = TextAnchor.MiddleCenter;
-				miniButton.padding = new RectOffset(0, 2, 0, 2);
-				miniButton.fontSize = 12;
-			}
+			boldMiniButton.alignment = TextAnchor.MiddleCenter;
+			boldMiniButton.padding = new RectOffset(0, 2, 0, 2);
 
-			ListIterator(Attributes, ref Attributes_FoldOut);
+			miniButton.alignment = TextAnchor.MiddleCenter;
+			miniButton.padding = new RectOffset(0, 2, 0, 2);
 
-            /*
-			NameList_FoldOut.boolValue = EditorGUILayout.Foldout(NameList_FoldOut.boolValue, "NameList:", boldFoldOut);
-            if (NameList_FoldOut.boolValue)
-                Names.DoLayoutList();
-            */
+			ListIterator(Attributes);
 
 			serializedObject.ApplyModifiedProperties();
 
 			if (GUI.changed)
 			{
-				manager.UpdateAttributeNamesList();
 				EditorUtility.SetDirty(manager);
 			}
 		}
 	}
 }
+#endif

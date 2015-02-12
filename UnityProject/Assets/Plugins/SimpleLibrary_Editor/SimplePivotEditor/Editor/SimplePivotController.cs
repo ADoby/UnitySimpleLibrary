@@ -5,6 +5,7 @@
  * Completely different to "SetPivot" you can actually move the pivot around while this script is active
  * Center Pivot works well with non rotated objects, rotated objects work ok but move a little bit around
  */
+#if UNITY_EDITOR
 
 using UnityEngine;
 using UnityEditor;
@@ -22,8 +23,6 @@ namespace SimpleLibrary
         MeshFilter meshFilter; //Mesh Filter of the selected object
         Mesh mesh; //Mesh of the selected object
         Collider col; //Collider of the selected object
-
-        bool pivotUnchanged; //Flag to decide when to instantiate a copy of the mesh
 
         Vector3 LastPosition;
 
@@ -175,7 +174,6 @@ namespace SimpleLibrary
                 if (mesh)
                     UpdatePivotVector();
                 col = obj.GetComponent(typeof(Collider)) as Collider;
-                pivotUnchanged = true;
             }
             else
             {
@@ -184,3 +182,4 @@ namespace SimpleLibrary
         }
     }
 }
+#endif

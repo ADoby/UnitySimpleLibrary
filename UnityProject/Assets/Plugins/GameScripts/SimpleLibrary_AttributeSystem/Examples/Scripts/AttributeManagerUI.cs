@@ -9,8 +9,6 @@ namespace SimpleLibrary
         public GameObject AttributePanelPrefab;
         public RectTransform AttributeParent;
 
-        public Attribute attribute;
-
         void Start()
         {
             //Spawn an AttributeUI for each attribute
@@ -22,7 +20,7 @@ namespace SimpleLibrary
             int index = 0;
             float height = 50f;
 
-            foreach (var attribute in AttributeManager.Instance.GetAttributes())
+            foreach (var attribute in AttributeManager.Instance.GetAttributes)
             {
                 currentAttribute = GameObject.Instantiate(AttributePanelPrefab) as GameObject;
                 attributeUI = currentAttribute.GetComponent<AttributeUI>();
@@ -30,7 +28,7 @@ namespace SimpleLibrary
 
                 if (attributePanel)
                 {
-                    attributePanel.parent = AttributeParent;
+                    attributePanel.SetParent(AttributeParent);
 
                     attributePanel.localScale = new Vector3(1, 1, 1);
 
@@ -40,8 +38,8 @@ namespace SimpleLibrary
                 }
                 if (attributeUI)
                 {
-                    attributeUI.AttrType.category = attribute.AttrType.category;
-                    attributeUI.AttrType.type = AttributeManager.Instance.GetNameIndex(attribute.Name);
+                    attributeUI.AttrType.category = attribute.AttrInfo.category;
+                    attributeUI.AttrType.type = attribute.AttrInfo.type;
                 }
                 index++;
             }

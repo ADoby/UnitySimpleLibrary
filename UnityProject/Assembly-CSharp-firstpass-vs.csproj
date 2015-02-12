@@ -63,6 +63,16 @@
      <Compile Include="Assets\Plugins\GameScripts\SimpleLibrary_AttributeSystem\Editor\Attribute_PropertyDrawer.cs" />
      <Compile Include="Assets\Plugins\GameScripts\SimpleLibrary_AttributeSystem\Examples\Scripts\AttributeManagerUI.cs" />
      <Compile Include="Assets\Plugins\GameScripts\SimpleLibrary_AttributeSystem\Examples\Scripts\AttributeUI.cs" />
+     <Compile Include="Assets\Plugins\GameScripts\SimpleLibrary_AttributeSystem\Examples\Scripts\Enemy.cs" />
+     <Compile Include="Assets\Plugins\GameScripts\SimpleLibrary_AttributeSystem\SimpleLibrary_Essentials\Editor\Timer_Editor.cs" />
+     <Compile Include="Assets\Plugins\GameScripts\SimpleLibrary_AttributeSystem\SimpleLibrary_Essentials\Examples\Singleton\Scripts\SingletonExample_GameManager.cs" />
+     <Compile Include="Assets\Plugins\GameScripts\SimpleLibrary_AttributeSystem\SimpleLibrary_Essentials\Examples\Singleton\Scripts\SingletonExample_GameManagerUI.cs" />
+     <Compile Include="Assets\Plugins\GameScripts\SimpleLibrary_AttributeSystem\SimpleLibrary_Essentials\Examples\Singleton\Scripts\SingletonExample_PlayerTester.cs" />
+     <Compile Include="Assets\Plugins\GameScripts\SimpleLibrary_AttributeSystem\SimpleLibrary_Essentials\Examples\Timer\Scripts\TimerExamples.cs" />
+     <Compile Include="Assets\Plugins\GameScripts\SimpleLibrary_AttributeSystem\SimpleLibrary_Essentials\Extensions.cs" />
+     <Compile Include="Assets\Plugins\GameScripts\SimpleLibrary_AttributeSystem\SimpleLibrary_Essentials\SimpleEditor.cs" />
+     <Compile Include="Assets\Plugins\GameScripts\SimpleLibrary_AttributeSystem\SimpleLibrary_Essentials\Singleton.cs" />
+     <Compile Include="Assets\Plugins\GameScripts\SimpleLibrary_AttributeSystem\SimpleLibrary_Essentials\Timer.cs" />
      <Compile Include="Assets\Plugins\GameScripts\SimplePool\GameObjectPool.cs" />
      <Compile Include="Assets\Plugins\GameScripts\SimplePool\GameObjectPoolCreate.cs" />
      <Compile Include="Assets\Plugins\GameScripts\SimpleSpawner\Arena_Spawner.cs" />
@@ -82,17 +92,9 @@
      <Compile Include="Assets\Plugins\SimpleLibrary_Editor\SimpleEditorShortcuts\Editor\SimpleKeyboardShortcuts.cs" />
      <Compile Include="Assets\Plugins\SimpleLibrary_Editor\SimplePivotEditor\Editor\SimplePivotController.cs" />
      <Compile Include="Assets\Plugins\SimpleLibrary_Editor\SimpleTransformInspector\Editor\TransformInspector.cs" />
-     <Compile Include="Assets\Plugins\SimpleLibrary_Essentials\Editor\Timer_Editor.cs" />
-     <Compile Include="Assets\Plugins\SimpleLibrary_Essentials\Examples\Singleton\Scripts\SingletonExample_GameManager.cs" />
-     <Compile Include="Assets\Plugins\SimpleLibrary_Essentials\Examples\Singleton\Scripts\SingletonExample_GameManagerUI.cs" />
-     <Compile Include="Assets\Plugins\SimpleLibrary_Essentials\Examples\Singleton\Scripts\SingletonExample_PlayerTester.cs" />
-     <Compile Include="Assets\Plugins\SimpleLibrary_Essentials\Examples\Timer\Scripts\TimerExamples.cs" />
-     <Compile Include="Assets\Plugins\SimpleLibrary_Essentials\Extensions.cs" />
-     <Compile Include="Assets\Plugins\SimpleLibrary_Essentials\SimpleEditor.cs" />
-     <Compile Include="Assets\Plugins\SimpleLibrary_Essentials\Singleton.cs" />
-     <Compile Include="Assets\Plugins\SimpleLibrary_Essentials\Timer.cs" />
      <None Include="Assets\Plugins\SimpleLibrary_Editor\README.txt" />
-     <None Include="Assets\Plugins\SimpleLibrary_Essentials\README.txt" />
+     <None Include="Assets\Plugins\GameScripts\SimpleLibrary_AttributeSystem\SimpleLibrary_Essentials\README.txt" />
+     <None Include="Assets\Plugins\GameScripts\SimpleLibrary_AttributeSystem\README.txt" />
  <Reference Include="UnityEngine.UI">
  <HintPath>G:/Programmieren/Unity/Editor-4.6.1/Data/UnityExtensions/Unity/GUISystem/4.6.1/UnityEngine.UI.dll</HintPath>
  </Reference>

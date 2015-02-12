@@ -3,7 +3,7 @@
  * V1
  * 
  */
-
+#if UNITY_EDITOR
 using UnityEngine;
 using UnityEditor;
 using System.Collections;
@@ -209,3 +209,4 @@ namespace SimpleLibrary
 
     }
 }
+#endif

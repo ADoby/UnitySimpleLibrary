@@ -61,7 +61,6 @@ public class SpawnWeight
 
 public class WeightedRandomizer<T>
 {
-    private static Random _random = new Random();
     private List<KeyValuePair<T, int>> _weights;
 
     private int weightSum = 0;
