@@ -21,6 +21,14 @@ namespace SimpleLibrary
             }
         }
 
+		public static void SplitBox(float height = 10f, float boxHeightDiff = 4f)
+		{
+			Rect boxRect = GUILayoutUtility.GetRect(0, height);
+			boxRect.y += 2;
+			boxRect.height -= boxHeightDiff;
+			GUI.Box(boxRect, "");
+		}
+
     }
 }
 #endif

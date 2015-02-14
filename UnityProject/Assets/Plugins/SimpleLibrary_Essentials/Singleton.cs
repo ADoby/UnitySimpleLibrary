@@ -7,9 +7,11 @@
 
 using UnityEngine;
 using System.Collections;
+using System;
 
 namespace SimpleLibrary
 {
+	//Monobehaviour Singleton for Unity use
     public class Singleton<ChildType> : MonoBehaviour where ChildType : MonoBehaviour
     {
         //Never use this directly, thats why its private NOT protected
