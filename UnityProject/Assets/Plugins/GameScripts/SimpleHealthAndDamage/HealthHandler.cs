@@ -67,7 +67,8 @@ namespace SimpleLibrary
         }
         public void DropItem(Vector3 position, string pool)
         {
-            GameObject go = GameObjectPool.Instance.Spawn(pool, position, Quaternion.identity);
+            GameObject go=null;
+            //GameObject go = GameObjectPool.Instance.Spawn(pool, position, Quaternion.identity);
             if (go)
             {
                 if (go.rigidbody)
@@ -179,7 +180,7 @@ namespace SimpleLibrary
 
         public virtual void Despawn()
         {
-            GameObjectPool.Instance.Despawn(poolName, gameObject);
+            //GameObjectPool.Instance.Despawn(poolName, gameObject);
         }
 
         public virtual void HitForce(float force, float minForceForRagdoll)

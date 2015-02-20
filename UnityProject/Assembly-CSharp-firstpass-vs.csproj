@@ -39,10 +39,10 @@
 	<Reference Include="System.Core" />
 	<Reference Include="System.Xml.Linq" />
 	<Reference Include="UnityEngine">
-	  <HintPath>G:/Programmieren/Unity/Editor-4.6.1/Data/Managed/UnityEngine.dll</HintPath>
+	  <HintPath>C:/Program Files (x86)/Unity/Editor4.6.1/Data/Managed/UnityEngine.dll</HintPath>
 	</Reference>
 	<Reference Include="UnityEditor">
-	  <HintPath>G:/Programmieren/Unity/Editor-4.6.1/Data/Managed/UnityEditor.dll</HintPath>
+	  <HintPath>C:/Program Files (x86)/Unity/Editor4.6.1/Data/Managed/UnityEditor.dll</HintPath>
 	</Reference>
   </ItemGroup>
   <ItemGroup>
@@ -69,8 +69,15 @@
      <Compile Include="Assets\Plugins\GameScripts\SimpleLibrary_Pool\Editor\SimplePool_Editor.cs" />
      <Compile Include="Assets\Plugins\GameScripts\SimpleLibrary_Pool\Examples\Scripts\Cube.cs" />
      <Compile Include="Assets\Plugins\GameScripts\SimpleLibrary_Pool\Examples\Scripts\RandomPositionSpawner.cs" />
-     <Compile Include="Assets\Plugins\GameScripts\SimpleLibrary_Pool\GameObjectPool.cs" />
-     <Compile Include="Assets\Plugins\GameScripts\SimpleLibrary_Pool\GameObjectPoolCreate.cs" />
+     <Compile Include="Assets\Plugins\GameScripts\SimpleLibrary_Pool\SimpleLibrary_Essentials\Editor\Timer_Editor.cs" />
+     <Compile Include="Assets\Plugins\GameScripts\SimpleLibrary_Pool\SimpleLibrary_Essentials\Examples\Singleton\Scripts\SingletonExample_GameManager.cs" />
+     <Compile Include="Assets\Plugins\GameScripts\SimpleLibrary_Pool\SimpleLibrary_Essentials\Examples\Singleton\Scripts\SingletonExample_GameManagerUI.cs" />
+     <Compile Include="Assets\Plugins\GameScripts\SimpleLibrary_Pool\SimpleLibrary_Essentials\Examples\Singleton\Scripts\SingletonExample_PlayerTester.cs" />
+     <Compile Include="Assets\Plugins\GameScripts\SimpleLibrary_Pool\SimpleLibrary_Essentials\Examples\Timer\Scripts\TimerExamples.cs" />
+     <Compile Include="Assets\Plugins\GameScripts\SimpleLibrary_Pool\SimpleLibrary_Essentials\Extensions.cs" />
+     <Compile Include="Assets\Plugins\GameScripts\SimpleLibrary_Pool\SimpleLibrary_Essentials\SimpleEditor.cs" />
+     <Compile Include="Assets\Plugins\GameScripts\SimpleLibrary_Pool\SimpleLibrary_Essentials\Singleton.cs" />
+     <Compile Include="Assets\Plugins\GameScripts\SimpleLibrary_Pool\SimpleLibrary_Essentials\Timer.cs" />
      <Compile Include="Assets\Plugins\GameScripts\SimpleLibrary_Pool\SimplePool.cs" />
      <Compile Include="Assets\Plugins\GameScripts\SimpleLibrary_Pool\SimplePoolManager.cs" />
      <Compile Include="Assets\Plugins\GameScripts\SimpleSpawner\Arena_Spawner.cs" />
@@ -90,21 +97,12 @@
      <Compile Include="Assets\Plugins\SimpleLibrary_Editor\SimpleEditorShortcuts\Editor\SimpleKeyboardShortcuts.cs" />
      <Compile Include="Assets\Plugins\SimpleLibrary_Editor\SimplePivotEditor\Editor\SimplePivotController.cs" />
      <Compile Include="Assets\Plugins\SimpleLibrary_Editor\SimpleTransformInspector\Editor\TransformInspector.cs" />
-     <Compile Include="Assets\Plugins\SimpleLibrary_Essentials\Editor\Timer_Editor.cs" />
-     <Compile Include="Assets\Plugins\SimpleLibrary_Essentials\Examples\Singleton\Scripts\SingletonExample_GameManager.cs" />
-     <Compile Include="Assets\Plugins\SimpleLibrary_Essentials\Examples\Singleton\Scripts\SingletonExample_GameManagerUI.cs" />
-     <Compile Include="Assets\Plugins\SimpleLibrary_Essentials\Examples\Singleton\Scripts\SingletonExample_PlayerTester.cs" />
-     <Compile Include="Assets\Plugins\SimpleLibrary_Essentials\Examples\Timer\Scripts\TimerExamples.cs" />
-     <Compile Include="Assets\Plugins\SimpleLibrary_Essentials\Extensions.cs" />
-     <Compile Include="Assets\Plugins\SimpleLibrary_Essentials\SimpleEditor.cs" />
-     <Compile Include="Assets\Plugins\SimpleLibrary_Essentials\Singleton.cs" />
-     <Compile Include="Assets\Plugins\SimpleLibrary_Essentials\Timer.cs" />
      <None Include="Assets\Plugins\SimpleLibrary_Editor\README.txt" />
-     <None Include="Assets\Plugins\SimpleLibrary_Essentials\README.txt" />
+     <None Include="Assets\Plugins\GameScripts\SimpleLibrary_Pool\SimpleLibrary_Essentials\README.txt" />
      <None Include="Assets\Plugins\GameScripts\SimpleLibrary_AttributeSystem\README.txt" />
      <None Include="Assets\Plugins\GameScripts\SimpleLibrary_Pool\README.txt" />
  <Reference Include="UnityEngine.UI">
- <HintPath>G:/Programmieren/Unity/Editor-4.6.1/Data/UnityExtensions/Unity/GUISystem/4.6.1/UnityEngine.UI.dll</HintPath>
+ <HintPath>C:/Program Files (x86)/Unity/Editor4.6.1/Data/UnityExtensions/Unity/GUISystem/4.6.1/UnityEngine.UI.dll</HintPath>
  </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

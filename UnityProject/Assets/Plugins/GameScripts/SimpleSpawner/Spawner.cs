@@ -31,8 +31,8 @@ public class Spawner : MonoBehaviour {
     void spawny()
     {
         string poolName = randomizer.TakeOne();
-
-        GameObject enemie = GameObjectPool.Instance.Spawn(poolName, transform.position, Quaternion.identity);
+        GameObject enemie = null;
+        //GameObject enemie = GameObjectPool.Instance.Spawn(poolName, transform.position, Quaternion.identity);
         enemie.SendMessage("Reset", SendMessageOptions.DontRequireReceiver);
 
         Debug.Log("Spawning");
@@ -41,8 +41,8 @@ public class Spawner : MonoBehaviour {
     IEnumerator Spawn()
     {
         string poolName = randomizer.TakeOne();
-
-        GameObject enemie = GameObjectPool.Instance.Spawn(poolName, transform.position, Quaternion.identity);
+        GameObject enemie = null;
+        //GameObject enemie = GameObjectPool.Instance.Spawn(poolName, transform.position, Quaternion.identity);
         enemie.SendMessage("Reset", SendMessageOptions.DontRequireReceiver);
 
         Debug.Log("Spawning");

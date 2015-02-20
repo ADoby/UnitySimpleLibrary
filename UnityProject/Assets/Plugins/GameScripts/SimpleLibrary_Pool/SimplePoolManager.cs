@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,8 +28,10 @@ namespace SimpleLibrary
 			instance = FindObjectOfType<SimplePoolManager>();
 			if (instance == null)
 			{
+				#if UNITY_EDITOR
 				Debug.Log("No SimplePoolManager found, generating one");
 				SimplePoolManager_Editor.CreateSimplePoolManager();
+				#endif
 			}
 		}
 		#endregion

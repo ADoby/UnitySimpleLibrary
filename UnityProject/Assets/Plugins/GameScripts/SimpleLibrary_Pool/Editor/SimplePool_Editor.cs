@@ -1,4 +1,4 @@
-﻿#region UNITY_EDITOR
+﻿#if UNITY_EDITOR
 
 using UnityEngine;
 using System.Collections;
@@ -233,4 +233,4 @@ namespace SimpleLibrary
 	}
 }
 
-#endregion
+#endif
