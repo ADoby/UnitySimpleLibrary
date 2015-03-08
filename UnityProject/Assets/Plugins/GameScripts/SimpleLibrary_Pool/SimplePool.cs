@@ -223,7 +223,7 @@ namespace SimpleLibrary
 					go.transform.position = DeactivatePosition;
 			}
 			if (ReparentOnDespawn)
-				go.transform.parent = Parent;
+				go.transform.SetParent(Parent);
 
 			availableObjects.Enqueue(go);
 			AvailableObjects = availableObjects.Count;
@@ -257,7 +257,7 @@ namespace SimpleLibrary
 			if (ThisPrefab == null)
 				return;
 			GameObject go = GameObject.Instantiate(ThisPrefab) as GameObject;
-			go.transform.parent = Parent;
+			go.transform.SetParent(Parent);
 			go.SendMessage("SetPoolPrefab", ThisPrefab, SendMessageOptions.DontRequireReceiver);
 
 			DespawnObject(go, false);

@@ -28,10 +28,10 @@ namespace SimpleLibrary
 			instance = FindObjectOfType<SimplePoolManager>();
 			if (instance == null)
 			{
-				#if UNITY_EDITOR
 				Debug.Log("No SimplePoolManager found, generating one");
-				SimplePoolManager_Editor.CreateSimplePoolManager();
-				#endif
+				GameObject go = new GameObject();
+				SimplePoolManager.Instance = go.AddComponent<SimplePoolManager>();
+				go.name = "SimplePoolManager";
 			}
 		}
 		#endregion
