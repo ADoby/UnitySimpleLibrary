@@ -355,7 +355,6 @@ namespace SimpleLibrary
             if (GUI.Button(rect5, "-", miniButton))
 				removeAttribute = currentAttribute;
 
-
 			EditorGUILayout.BeginHorizontal();
 
 			GUI.enabled = enabled.boolValue;
