@@ -28,7 +28,7 @@ namespace SimpleLibrary
 
         static SimplePivotController window;
 
-        [MenuItem("GameObject/Pivot Controller &#p")] //Place the Set Pivot menu item in the GameObject menu
+        [MenuItem("GameObject/Pivot Controller")] //Place the Set Pivot menu item in the GameObject menu
         static void Init()
         {
             if (window)
