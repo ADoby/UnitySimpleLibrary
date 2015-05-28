@@ -34,6 +34,13 @@ namespace SimpleLibrary
 				go.name = "SimplePoolManager";
 			}
 		}
+		public static bool HasInstance
+		{
+			get
+			{
+				return instance != null;
+			}
+		}
 		#endregion
 
 		Queue<SimplePool.DestroyInfo> destroyQueue = new Queue<SimplePool.DestroyInfo>();

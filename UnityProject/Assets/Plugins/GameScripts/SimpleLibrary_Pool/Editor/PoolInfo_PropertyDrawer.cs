@@ -10,9 +10,7 @@ namespace SimpleLibrary
 	{
 		public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
 		{
-			property.serializedObject.Update();
-
-			if (SimplePoolManager.Instance)
+			if (SimplePoolManager.HasInstance)
 			{
 				PoolInfo info = (PoolInfo)fieldInfo.GetValue(property.serializedObject.targetObject);
 
@@ -37,8 +35,6 @@ namespace SimpleLibrary
 				EditorGUI.LabelField(position, "Error: No SimplePoolManager found");
 				GUI.color = before;
 			}
-			
-			property.serializedObject.ApplyModifiedProperties();
 		}
 	}
 }

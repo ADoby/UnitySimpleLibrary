@@ -6,6 +6,7 @@ namespace SimpleLibrary
 	public class RandomPositionSpawner : MonoBehaviour
 	{
 		public PoolInfo CubePool;
+		public GameObject CubePrefab;
 		public SimpleLibrary.Timer SpawnTimer;
 		public SimpleLibrary.Timer SpawnTimer2;
 		public SimpleLibrary.Timer SpawnTimer3;
@@ -25,7 +26,7 @@ namespace SimpleLibrary
 				position.x = Random.Range(MinPosition.x, MaxPosition.x);
 				position.y = Random.Range(MinPosition.y, MaxPosition.y);
 				position.z = Random.Range(MinPosition.z, MaxPosition.z);
-				SimpleLibrary.SimplePoolManager.Spawn(CubePool, position);
+				CubePool.Spawn(position);
 			} 
 			if (SpawnTimer2.UpdateAutoReset(LerpValue))
 			{
@@ -33,7 +34,7 @@ namespace SimpleLibrary
 				position.x = Random.Range(MinPosition.x, MaxPosition.x);
 				position.y = Random.Range(MinPosition.y, MaxPosition.y);
 				position.z = Random.Range(MinPosition.z, MaxPosition.z);
-				SimpleLibrary.SimplePoolManager.Spawn(CubePool, position);
+				CubePrefab.Spawn(position);
 			}
 			if (SpawnTimer3.UpdateAutoReset(LerpValue))
 			{
@@ -42,6 +43,8 @@ namespace SimpleLibrary
 				position.y = Random.Range(MinPosition.y, MaxPosition.y);
 				position.z = Random.Range(MinPosition.z, MaxPosition.z);
 				SimpleLibrary.SimplePoolManager.Spawn(CubePool, position);
+				//or
+				//SimpleLibrary.SimplePoolManager.Spawn(CubePrefab, position);
 			}
 		}
 	}

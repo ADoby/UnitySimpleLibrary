@@ -5,6 +5,26 @@ using System.Linq;
 
 namespace SimpleLibrary
 {
+	public static class GameObjectExtension
+	{
+		public static GameObject Spawn(this GameObject prefab)
+		{
+			return SimplePoolManager.Spawn(prefab);
+		}
+		public static GameObject Spawn(this GameObject prefab, Vector3 position)
+		{
+			return SimplePoolManager.Spawn(prefab, position);
+		}
+		public static GameObject Spawn(this GameObject prefab, Vector3 position, Quaternion rotation)
+		{
+			return SimplePoolManager.Spawn(prefab, position, rotation);
+		}
+		public static void Despawn(this GameObject go)
+		{
+			SimplePoolManager.Despawn(go);
+		}
+	}
+
 	[System.Serializable]
 	public class PoolInfo
 	{
@@ -14,6 +34,19 @@ namespace SimpleLibrary
 		{
 			if (from == SelectedPoolIndex)
 				SelectedPoolIndex = to;
+		}
+
+		public GameObject Spawn()
+		{
+			return SimplePoolManager.Spawn(this);
+		}
+		public GameObject Spawn( Vector3 position)
+		{
+			return SimplePoolManager.Spawn(this, position);
+		}
+		public GameObject Spawn(Vector3 position, Quaternion rotation)
+		{
+			return SimplePoolManager.Spawn(this, position, rotation);
 		}
 	}
 
