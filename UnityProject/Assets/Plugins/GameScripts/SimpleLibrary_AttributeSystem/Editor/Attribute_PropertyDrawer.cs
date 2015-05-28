@@ -77,7 +77,16 @@ namespace SimpleLibrary
 			boldFoldOut = new GUIStyle(EditorStyles.foldout);
 			boldFoldOut.richText = true;
 
-			Attribute attribute = (Attribute)fieldInfo.GetValue(property.serializedObject.targetObject);
+			Attribute attribute;
+			try
+			{
+				attribute = (Attribute)fieldInfo.GetValue(property.serializedObject.targetObject);
+			}
+			catch (System.Exception)
+			{
+				EditorGUI.LabelField(position, "Editor could not be shown");
+				return;
+			}
 
 
             //UI specific variables

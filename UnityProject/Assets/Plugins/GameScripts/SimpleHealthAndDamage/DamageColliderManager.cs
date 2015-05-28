@@ -65,8 +65,8 @@ namespace SimpleLibrary
                     return item.minHitForceForRagdoll;
             }
             float compute = DefaultMinForceForRagdoll;
-            if (go.rigidbody)
-                compute += go.rigidbody.mass * MinForceMultipliedByMass;
+            if (go.GetComponent<Rigidbody>())
+                compute += go.GetComponent<Rigidbody>().mass * MinForceMultipliedByMass;
             return compute;
         }
 

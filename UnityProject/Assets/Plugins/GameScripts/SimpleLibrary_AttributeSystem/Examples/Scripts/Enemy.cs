@@ -8,7 +8,7 @@ namespace SimpleLibrary
 		public int CurrentLevel = 0;
 
 		public AttributeInfo AttributeInfo;
-		public float AttributeInfoValue = 0f;
+		//public float AttributeInfoValue = 0f;
 
 		//Second part is not needed, but shows a nice name in the editor, debug mode enables editing points in Editor
 		//THESE attributes will NOT be available from AttributeManager
@@ -17,7 +17,7 @@ namespace SimpleLibrary
 
 		void Update()
 		{
-			AttributeInfoValue = AttributeInfo.Value;
+			//AttributeInfoValue = AttributeInfo.Value;
 		}
 
 		public void Reset()

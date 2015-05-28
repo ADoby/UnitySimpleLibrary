@@ -50,11 +50,11 @@ namespace SimpleLibrary
 
         public void AddCachedForces()
         {
-            if (hitForces.Count > 0 && !rigidbody.isKinematic)
+            if (hitForces.Count > 0 && !GetComponent<Rigidbody>().isKinematic)
             {
                 foreach (var item in hitForces)
                 {
-                    rigidbody.AddForceAtPosition(item.force, item.position, ForceMode.Impulse);
+                    GetComponent<Rigidbody>().AddForceAtPosition(item.force, item.position, ForceMode.Impulse);
                 }
 
                 hitForces.Clear();
@@ -78,7 +78,7 @@ namespace SimpleLibrary
 
                     ForceForRagdoll(info.relativeVelocity.magnitude);
 
-                    if (rigidbody.isKinematic)
+                    if (GetComponent<Rigidbody>().isKinematic)
                     {
                         hitForces.Add(new HitInfo() { force = info.relativeVelocity, position = info.contacts[0].point });
                     }

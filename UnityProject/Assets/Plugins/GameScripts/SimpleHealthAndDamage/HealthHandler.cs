@@ -71,14 +71,14 @@ namespace SimpleLibrary
             //GameObject go = GameObjectPool.Instance.Spawn(pool, position, Quaternion.identity);
             if (go)
             {
-                if (go.rigidbody)
+                if (go.GetComponent<Rigidbody>())
                 {
                     Vector3 force = Vector3.zero;
                     force.x = Random.Range(MinRandomForce.x, MaxRandomForce.x);
                     force.y = Random.Range(MinRandomForce.y, MaxRandomForce.y);
                     force.z = Random.Range(MinRandomForce.z, MaxRandomForce.z);
-                    go.rigidbody.AddForce(force * go.rigidbody.mass);
-                    go.rigidbody.AddTorque(Random.insideUnitSphere * go.rigidbody.mass * RandomTourqeAmount);
+                    go.GetComponent<Rigidbody>().AddForce(force * go.GetComponent<Rigidbody>().mass);
+                    go.GetComponent<Rigidbody>().AddTorque(Random.insideUnitSphere * go.GetComponent<Rigidbody>().mass * RandomTourqeAmount);
                 }
             }
         }
