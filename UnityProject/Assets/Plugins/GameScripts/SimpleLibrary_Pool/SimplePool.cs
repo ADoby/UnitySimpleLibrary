@@ -109,7 +109,7 @@ namespace SimpleLibrary
 		public bool ReparentOnDespawn = true;
 
 		public bool UseOnSpawnMessage = true;
-		public bool UseOnDespawnMessage = false;
+		public bool UseOnDespawnMessage = true;
 
 		public bool ActivateOnSpawn = true;
 		public bool DeactivateOnDespawn = true;
@@ -120,8 +120,8 @@ namespace SimpleLibrary
 		public Transform TargetPositionTransform = null;
 
 
-		public bool DestroyUnusedObjects = true;
-		public bool Intelligence = true;
+		public bool DestroyUnusedObjects = false;
+		public bool Intelligence = false;
 
 		public int WantedFreeObjects = 10;
 

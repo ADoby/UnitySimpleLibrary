@@ -8,6 +8,7 @@ namespace SimpleLibrary
 	[CustomPropertyDrawer(typeof(PoolInfo))]
 	public class PoolInfo_PropertyDrawer : PropertyDrawer
 	{
+		Color color;
 		public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
 		{
 			if (SimplePoolManager.HasInstance)

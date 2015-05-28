@@ -73,11 +73,11 @@ namespace SimpleLibrary
 				EditorUtility.SetDirty(manager);
 			}
 
-			EditorGUILayout.IntField("Pool Count:", manager.Pools.Count);
+			//EditorGUILayout.IntField("Pool Count:", manager.Pools.Count);
 
 			if (manager.Pools.Count > 0)
 			{
-				Pools_FoldOut.boolValue = EditorGUILayout.Foldout(Pools_FoldOut.boolValue, "Pool-List");
+				Pools_FoldOut.boolValue = EditorGUILayout.Foldout(Pools_FoldOut.boolValue, string.Format("Pool-List: {0}", manager.Pools.Count));
 				if (Pools_FoldOut.boolValue)
 				{
 					SimplePool pool = null;

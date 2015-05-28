@@ -14,8 +14,16 @@ namespace SimpleLibrary
 		[MenuItem("GameObject/SimpleLibrary/SimplePoolManager/SimplePool")]
 		public static void CreateSimplePool()
 		{
+			SimplePool pool = CreatePool(null);
+
+			Selection.activeGameObject = pool.gameObject;
+		}
+
+		public static SimplePool CreatePool(GameObject prefab)
+		{
 			GameObject go = new GameObject();
 			SimplePool pool = go.AddComponent<SimplePool>();
+			pool.ThisPrefab = prefab;
 			go.name = "SimplePool";
 			if (Selection.activeGameObject)
 				go.transform.SetParent(Selection.activeGameObject.transform);
@@ -26,7 +34,7 @@ namespace SimpleLibrary
 			if (go.transform.parent == null)
 				go.transform.SetParent(SimplePoolManager.Instance.transform);
 
-			Selection.activeGameObject = pool.gameObject;
+			return pool;
 		}
 		#endregion
 

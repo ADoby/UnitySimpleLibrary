@@ -254,16 +254,20 @@ namespace SimpleLibrary
 		/// <returns></returns>
 		public static GameObject Spawn(GameObject prefab)
 		{
+			GameObject go = null;
 			foreach (var pool in Instance.Pools)
 			{
 				if (pool.Uses(prefab))
 				{
-					GameObject go = pool.Spawn();
+					go = pool.Spawn();
 					pool.AfterSpawn(go);
 					return go;
 				}
 			}
-			return null;
+			SimplePool newPool = CreatePool(prefab);
+			go = newPool.Spawn();
+			newPool.AfterSpawn(go);
+			return go;
 		}
 		public static GameObject Spawn(PoolInfo info)
 		{
@@ -275,16 +279,20 @@ namespace SimpleLibrary
 		//Overloads with different parameters
 		public static GameObject Spawn(GameObject prefab, Vector3 position)
 		{
+			GameObject go = null;
 			foreach (var pool in Instance.Pools)
 			{
 				if (pool.Uses(prefab))
 				{
-					GameObject go = pool.Spawn(position);
+					go = pool.Spawn(position);
 					pool.AfterSpawn(go);
 					return go;
 				}
 			}
-			return null;
+			SimplePool newPool = CreatePool(prefab);
+			go = newPool.Spawn(position);
+			newPool.AfterSpawn(go);
+			return go;
 		}
 		public static GameObject Spawn(PoolInfo info, Vector3 position)
 		{
@@ -323,6 +331,22 @@ namespace SimpleLibrary
 			return false;
 		}
 		#endregion
+
+
+		public static SimplePool CreatePool(GameObject prefab)
+		{
+			GameObject go = new GameObject();
+			SimplePool pool = go.AddComponent<SimplePool>();
+			pool.ThisPrefab = prefab;
+			go.name = "SimplePool";
+			pool.PoolName = go.name;
+
+			SimplePoolManager.Add(pool);
+			if (go.transform.parent == null)
+				go.transform.SetParent(SimplePoolManager.Instance.transform);
+
+			return pool;
+		}
 	}
 
 }
