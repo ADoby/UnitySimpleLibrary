@@ -5,7 +5,10 @@ namespace SimpleLibrary
 {
 	public class Enemy : MonoBehaviour 
 	{
+        [Range(0, 1)]
 		public int CurrentLevel = 0;
+
+        public MyColor color;
 
 		public AttributeInfo AttributeInfo;
 		//public float AttributeInfoValue = 0f;
