@@ -1,25 +1,27 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using SimpleLibrary;
 
 public class Spawner : MonoBehaviour {
 
     public SpawnWeight[] spawnPools;
 
-    WeightedRandomizer<string> randomizer;
+    WeightedRandomizer<GameObject> randomizer;
 
     public bool activated = true;
 
     public float spawnTime = 5.0f;
 
 	// Use this for initialization
-	void Start () {
-        Dictionary<string, int> weights = new Dictionary<string, int>();
+	void Start ()
+	{
+		Dictionary<GameObject, int> weights = new Dictionary<GameObject, int>();
         foreach (var item in spawnPools)
         {
-            weights.Add(item.poolName, item.weight);
+            weights.Add(item.prefab, item.weight);
         }
-        randomizer = new WeightedRandomizer<string>(weights);
+		randomizer = new WeightedRandomizer<GameObject>(weights);
 
         StartCoroutine(Spawn());
 
@@ -28,21 +30,9 @@ public class Spawner : MonoBehaviour {
         //spawny();
 	}
 
-    void spawny()
-    {
-        string poolName = randomizer.TakeOne();
-        GameObject enemie = null;
-        //GameObject enemie = GameObjectPool.Instance.Spawn(poolName, transform.position, Quaternion.identity);
-        enemie.SendMessage("Reset", SendMessageOptions.DontRequireReceiver);
-
-        Debug.Log("Spawning");
-    }
-
     IEnumerator Spawn()
     {
-        string poolName = randomizer.TakeOne();
-        GameObject enemie = null;
-        //GameObject enemie = GameObjectPool.Instance.Spawn(poolName, transform.position, Quaternion.identity);
+		GameObject enemie = randomizer.TakeOne().Spawn();
         enemie.SendMessage("Reset", SendMessageOptions.DontRequireReceiver);
 
         Debug.Log("Spawning");
@@ -55,7 +45,7 @@ public class Spawner : MonoBehaviour {
 [System.Serializable]
 public class SpawnWeight
 {
-    public string poolName;
+	public GameObject prefab;
     public int weight;
 }
 

@@ -17,7 +17,6 @@ namespace SimpleLibrary
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
 		{
-			property.serializedObject.Update();
 
 			SerializedProperty FoldOut = property.FindPropertyRelative("FoldOut");
             SerializedProperty category = property.FindPropertyRelative("category");
@@ -47,7 +46,6 @@ namespace SimpleLibrary
 				}
             }
 
-			property.serializedObject.ApplyModifiedProperties();
         }
     }
 
@@ -69,7 +67,6 @@ namespace SimpleLibrary
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
 		{
-			property.serializedObject.Update();
 
 			miniButton = new GUIStyle(EditorStyles.miniButton);
 			miniButton.alignment = TextAnchor.MiddleCenter;
@@ -295,7 +292,6 @@ namespace SimpleLibrary
             }
             EditorGUI.indentLevel--;
 
-			property.serializedObject.ApplyModifiedProperties();
         }
 
 
